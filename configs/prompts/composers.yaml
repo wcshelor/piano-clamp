@@ -1,0 +1,7 @@
+prompts:
+  - id: composer_chopin
+    text: A piano passage by Frédéric Chopin.
+  - id: composer_mozart
+    text: A piano passage by Wolfgang Amadeus Mozart.
+  - id: composer_bach
+    text: A keyboard passage by Johann Sebastian Bach.

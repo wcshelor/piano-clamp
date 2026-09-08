@@ -1,0 +1,20 @@
+clamp3:
+  upstream_repository: https://github.com/sanderwood/clamp3
+  upstream_commit: 9016d2b0c8d12d1aa79c2e0ab201e6822bdc83a8
+  embedding_dimension: 768
+  checkpoints:
+    c2:
+      purpose: symbolic score/MIDI and text retrieval
+      filename: weights_clamp3_c2_h_size_768_t_model_FacebookAI_xlm-roberta-base_t_length_128_a_size_768_a_layers_12_a_length_128_s_size_768_s_layers_12_p_size_64_p_length_512.pth
+      location: models/clamp3-c2/
+      size_bytes: 2518324732
+      sha256: e6fb0d139b24a1ec20836bb65bd652303d570ea9af2cddb20a1fc161421d64af
+      tracked_with_git_lfs: false
+      installed: true
+    saas:
+      purpose: audio and text retrieval
+      filename: weights_clamp3_saas_h_size_768_t_model_FacebookAI_xlm-roberta-base_t_length_128_a_size_768_a_layers_12_a_length_128_s_size_768_s_layers_12_p_size_64_p_length_512.pth
+      location: models/clamp3-saas/
+      source: https://huggingface.co/sander-wood/clamp3/resolve/main/weights_clamp3_saas_h_size_768_t_model_FacebookAI_xlm-roberta-base_t_length_128_a_size_768_a_layers_12_a_length_128_s_size_768_s_layers_12_p_size_64_p_length_512.pth
+      tracked_with_git_lfs: false
+      installed: false

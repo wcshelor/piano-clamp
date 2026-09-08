@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#SBATCH --job-name=pclamp-analyze
+#SBATCH --partition=REPLACE_WITH_PARTITION
+#SBATCH --account=REPLACE_WITH_ACCOUNT
+#SBATCH --mem=REPLACE_WITH_MEMORY
+#SBATCH --time=REPLACE_WITH_TIME
+#SBATCH --output=REPLACE_WITH_LOG_DIRECTORY/%x-%j.out
+
+set -euo pipefail
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate piano-clamp-env
+: "${MUSIC_DATA_ROOT:?Set MUSIC_DATA_ROOT to the external data repository}"
+: "${CLAMP3_RUN_ROOT:?Set CLAMP3_RUN_ROOT to the external run root}"
+python -m piano_clamp.cli analyze --config configs/experiment_chopin_mozart.yaml
+

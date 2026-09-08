@@ -1,0 +1,50 @@
+# Symbolic-only Bach adapter config. Build the adapter with:
+#   python scripts/prepare_cpc_symbolic_adapter.py \
+#     --corpus-root "$PIANO_CLAMP_CORPUS_ROOT" \
+#     --output-root data/cpc_symbolic_adapter/bach-v0 \
+#     --composer Bach
+corpus_root: ${PIANO_CLAMP_CORPUS_ROOT}
+use_local_paths_overlay: false
+adapter_root: data/cpc_symbolic_adapter/bach-v0
+corpus_manifest: piano_clamp_manifest.csv
+score_root: data/processed/scores
+audio_root: data/processed/performances
+alignment_root: .
+
+vendor_root: vendor/clamp3
+checkpoint_path: models/clamp3-c2/weights_clamp3_c2_h_size_768_t_model_FacebookAI_xlm-roberta-base_t_length_128_a_size_768_a_layers_12_a_length_128_s_size_768_s_layers_12_p_size_64_p_length_512.pth
+checkpoint_sha256: e6fb0d139b24a1ec20836bb65bd652303d570ea9af2cddb20a1fc161421d64af
+verify_checkpoint_sha256: true
+low_memory_checkpoint_loading: true
+saas_checkpoint_path: models/clamp3-saas/weights_clamp3_saas_h_size_768_t_model_FacebookAI_xlm-roberta-base_t_length_128_a_size_768_a_layers_12_a_length_128_s_size_768_s_layers_12_p_size_64_p_length_512.pth
+mert_model: m-a-p/MERT-v1-95M
+prompt_bank: prompts/prompt_bank_v1.csv
+
+output_root: ../piano-clamp-runs/bach_symbolic_v0/embeddings
+embedding_store_root: ../piano-clamp-runs/bach_symbolic_v0/embedding_store
+analysis_root: ../piano-clamp-runs/bach_symbolic_v0/analysis
+log_root: ../piano-clamp-runs/bach_symbolic_v0/logs
+temporary_root: ../piano-clamp-runs/bach_symbolic_v0/temp
+device: auto
+batch_size_text: 32
+batch_size_symbolic: 1
+batch_size_audio: 1
+num_workers: 0
+normalize_embeddings: true
+random_seed: 20260819
+
+audio_sample_rate: 24000
+audio_mono: true
+audio_chunk_seconds: 30.0
+audio_chunk_overlap_seconds: 0.0
+audio_aggregation: mean
+authorized_rights_statuses:
+  - public_domain
+  - licensed_for_research
+  - user_supplied_authorized
+
+passage_methods:
+  - complete_movement
+  - fixed_4_bars
+  - fixed_8_bars
+  - fixed_16_bars

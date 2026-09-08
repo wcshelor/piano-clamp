@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this proof-of-concept repository, please cite it and the CLaMP 3 work."
+title: "Piano CLaMP: a Chopin–Mozart computational musicology proof of concept"
+type: software
+authors:
+  - name: "Piano CLaMP contributors"
+version: 0.1.0
+date-released: 2026-08-19
+license: MIT

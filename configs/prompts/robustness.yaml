@@ -1,0 +1,17 @@
+prompts:
+  - id: composer_chopin_paraphrase
+    text: Piano music composed by Frédéric Chopin.
+  - id: composer_mozart_paraphrase
+    text: Piano music composed by Wolfgang Amadeus Mozart.
+  - id: composer_bach_paraphrase
+    text: Keyboard music composed by Johann Sebastian Bach.
+  - id: classical_period_paraphrase
+    text: A solo piano excerpt in a Classical-era style.
+  - id: romantic_period_paraphrase
+    text: A solo piano excerpt in a Romantic-era style.
+  - id: baroque_period_paraphrase
+    text: A solo keyboard excerpt in a Baroque-era style.
+  - id: neutral_piano_control
+    text: A passage of solo piano music.
+  - id: unrelated_ocean_control
+    text: An outdoor field recording of ocean waves.

@@ -1,0 +1,1107 @@
+{
+  "alignment_format_counts": {
+    "cpc_canonical_beat": 180,
+    "cpc_canonical_note": 20
+  },
+  "alignment_gaps": [],
+  "audio_origin_counts": {
+    "source_recording": 109,
+    "synthetic_rendering": 91
+  },
+  "audio_window_ready_rows": 200,
+  "authorized_audio_rows": 200,
+  "cohort_recording_counts": {
+    "source_recording|Frédéric Chopin": 108,
+    "source_recording|Wolfgang Amadeus Mozart": 1,
+    "synthetic_rendering|Wolfgang Amadeus Mozart": 91
+  },
+  "composer_counts": {
+    "Frédéric Chopin": 108,
+    "Wolfgang Amadeus Mozart": 92
+  },
+  "composition_count": 65,
+  "errors": [],
+  "fully_aligned_audio_rows": 200,
+  "local_audio_rows": 200,
+  "movement_count": 65,
+  "multi_interpretation_compositions": [
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_0054edb621f3",
+      "recording_count": 4,
+      "recording_ids": [
+        "rec_47d8629a2793",
+        "rec_6bb8637586b5",
+        "rec_b440d6da6cfa",
+        "rec_eb9d9640ecf2"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_13ec9ec295c2",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_066ca07b3722",
+        "rec_68e94e60dd6b",
+        "rec_78fe2d7b6234"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_1791c45e1862",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_74edc64f3948",
+        "rec_de58678ceeee"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_1cb3d72ba143",
+      "recording_count": 8,
+      "recording_ids": [
+        "rec_2ee75ebfc2f1",
+        "rec_2f88da9ac9db",
+        "rec_312eeb41f474",
+        "rec_571e763e31b3",
+        "rec_89f72191795c",
+        "rec_c1cae28b0033",
+        "rec_d6d1f1f0bd29",
+        "rec_d84d50ca2538"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_1eedc0bd6874",
+      "recording_count": 5,
+      "recording_ids": [
+        "rec_299f69f3165c",
+        "rec_379d454cb061",
+        "rec_52ef4bc2644e",
+        "rec_d4be765b7520",
+        "rec_e1c8ddc3692b"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_286d812feb37",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_4c1d6e57cb59",
+        "rec_c5d8d61d4a24"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_2cab26df7266",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_270757849827",
+        "rec_f748d209625f"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_2d3dbfa86295",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_17eb936080ac",
+        "rec_22f80a180d47",
+        "rec_de5606824d6c"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_34a3a2c7440d",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_7c9c438484f4",
+        "rec_a48b49cd9c37",
+        "rec_d4ac8086ca2c"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_37866f5ade57",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_7d6b30708fcc",
+        "rec_bca717eb7072",
+        "rec_fda6edec3d99"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_3840f26af604",
+      "recording_count": 9,
+      "recording_ids": [
+        "rec_02ad3f9baa26",
+        "rec_29f31b66f92a",
+        "rec_41c93e82eddd",
+        "rec_45bd3e716eef",
+        "rec_541793f4826a",
+        "rec_63dd962b6819",
+        "rec_66589e66e39e",
+        "rec_870b8e5a7cfc",
+        "rec_c3e47cf47263"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_386b22f29c0d",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_79ec8391a9cb",
+        "rec_f686867ef6ab"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_3b04980a56a1",
+      "recording_count": 10,
+      "recording_ids": [
+        "rec_189409a355fd",
+        "rec_49931b7cd9e0",
+        "rec_68eb51a24b7f",
+        "rec_68f9c0062cc6",
+        "rec_7b351632bb07",
+        "rec_8028dc8dc15d",
+        "rec_9de1f934b5b0",
+        "rec_9e49d1e3adf4",
+        "rec_b9477f1d9807",
+        "rec_e00e4940f081"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_3f53c3033d5f",
+      "recording_count": 4,
+      "recording_ids": [
+        "rec_23a2d3abe130",
+        "rec_bcba8ff75afc",
+        "rec_c221809e3e25",
+        "rec_effd986df77a"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_4fade9260416",
+      "recording_count": 10,
+      "recording_ids": [
+        "rec_0a91b8b803e7",
+        "rec_182194e4fa4f",
+        "rec_412ef24cbe82",
+        "rec_5d92948919b1",
+        "rec_68fb04ad48cc",
+        "rec_744eef24e95f",
+        "rec_b9bc2be6a9c4",
+        "rec_c1e1ac6c77fb",
+        "rec_cba40f3c2cf7",
+        "rec_fd0b3bb5bab7"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_597e34f68688",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_2227bc843d1e",
+        "rec_967be27cc07c",
+        "rec_c52920aee8dd"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_5a3f42521212",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_44917c60c94a",
+        "rec_45fafcfc9f8b"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_73762bb69b7b",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_164926aa64b2",
+        "rec_33b7058272b1",
+        "rec_4a1e3d1a2030"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_7a370787218a",
+      "recording_count": 5,
+      "recording_ids": [
+        "rec_4bf2bb0108b7",
+        "rec_63af2f0eeac9",
+        "rec_b3612b323bf1",
+        "rec_c39b38ecdb2d",
+        "rec_cfe2bb1b21e8"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_7d2f6be52e06",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_77b12bef9fd2",
+        "rec_bb7cd5de8626",
+        "rec_c00c00b7e46b"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording",
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_7e0267a3eef2",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_8ae6f04d46b2",
+        "rec_a951bcd8870e",
+        "rec_da55bf9526c9"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_88d5e3c5451a",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_0b1cdc556f64",
+        "rec_29fcc47851dd"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_a67b3772a3b0",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_2ec7ada7465e",
+        "rec_fa2e486b88d2"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_ad2d73a6c8e0",
+      "recording_count": 4,
+      "recording_ids": [
+        "rec_4347dae94f4e",
+        "rec_518720e845d0",
+        "rec_9104f5bda49a",
+        "rec_d10caeb94672"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_adac7544dea5",
+      "recording_count": 6,
+      "recording_ids": [
+        "rec_0e6b35824f89",
+        "rec_16e6e8814b9b",
+        "rec_2cc14c88544f",
+        "rec_68edf82d66df",
+        "rec_90bc3dcc3257",
+        "rec_e38e11834c5c"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_aedc2a9cef37",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_1ae8885f2219",
+        "rec_6da493b2d0a0"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_b563f0486b86",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_4f179d3f0a07",
+        "rec_d2a253b6b0ef"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_b5bd959b8877",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_2b27573fbf12",
+        "rec_c01398cd8373"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_b8edb65ab828",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_6db8e6bf8807",
+        "rec_7f50fd73cec4",
+        "rec_ae056999d834"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_bb516492de95",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_372d19bb4ab8",
+        "rec_5efef2e38aa9",
+        "rec_e821b9a40beb"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_be7f3d842db9",
+      "recording_count": 7,
+      "recording_ids": [
+        "rec_0ff9c149d456",
+        "rec_2832086d921a",
+        "rec_3ee2b17cf0bb",
+        "rec_40cf99865eea",
+        "rec_d47828726571",
+        "rec_dfd1dd419679",
+        "rec_e09253204c64"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_c19fe5402db5",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_6f11e478e2ad",
+        "rec_6fad590f79e3",
+        "rec_e50fb53b1e4a"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_c4eac3f4866c",
+      "recording_count": 8,
+      "recording_ids": [
+        "rec_01ea5a7e5a82",
+        "rec_334ddef6e8f5",
+        "rec_9df5f10a5f19",
+        "rec_9e6911d4522e",
+        "rec_a079c1c72499",
+        "rec_b1ec096b41b3",
+        "rec_cdcbada66884",
+        "rec_ef31cf9747ba"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_ccd7dd49c8be",
+      "recording_count": 5,
+      "recording_ids": [
+        "rec_6297c2e123be",
+        "rec_78e57aabd0dd",
+        "rec_95bcd9323444",
+        "rec_a0f67311e5a2",
+        "rec_c0ed159b0416"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_d1e69a1bc1c8",
+      "recording_count": 3,
+      "recording_ids": [
+        "rec_5ebb0ffcf4b7",
+        "rec_a3c967ad5a1c",
+        "rec_ac72894afc40"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_d624aa5c7714",
+      "recording_count": 5,
+      "recording_ids": [
+        "rec_1196b97546a6",
+        "rec_14988f54c8ba",
+        "rec_24c73444dfc6",
+        "rec_a06f39ec97cc",
+        "rec_bbc3c6e0c3c8"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_db49212242e7",
+      "recording_count": 4,
+      "recording_ids": [
+        "rec_17c46e1e6557",
+        "rec_87f9e35452d2",
+        "rec_a29a5949349f",
+        "rec_be3c370fe3b1"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_eda77c2e8305",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_a3881ebb1056",
+        "rec_be7e49226091"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_ef443eed1fe6",
+      "recording_count": 5,
+      "recording_ids": [
+        "rec_43b1b9fbaf71",
+        "rec_43fbc3022696",
+        "rec_85b3f161802e",
+        "rec_af7e5d298d64",
+        "rec_b2249f244493"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_f3d2a1986786",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_c87a93e18fa2",
+        "rec_d248b7ffb462"
+      ]
+    },
+    {
+      "audio_origins": [
+        "source_recording"
+      ],
+      "composition_id": "cmp_fe9c731c2d2e",
+      "recording_count": 7,
+      "recording_ids": [
+        "rec_0181d79fbd62",
+        "rec_058bfbb21a9f",
+        "rec_355c3192214d",
+        "rec_49c0590179fd",
+        "rec_4f60458167e8",
+        "rec_5c630ae31080",
+        "rec_765471cbc2d3"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_fef1cb83d033",
+      "recording_count": 10,
+      "recording_ids": [
+        "rec_0ea81f3f9389",
+        "rec_128c2e36aab8",
+        "rec_1be7357ac69a",
+        "rec_23e106f13fcd",
+        "rec_75024038659c",
+        "rec_c635dd1d34bb",
+        "rec_ce41f0e6bd46",
+        "rec_d6034650404f",
+        "rec_d91ae459bdb9",
+        "rec_fbf71c4beeee"
+      ]
+    },
+    {
+      "audio_origins": [
+        "synthetic_rendering"
+      ],
+      "composition_id": "cmp_ffe626e2d096",
+      "recording_count": 2,
+      "recording_ids": [
+        "rec_4683766c80fd",
+        "rec_df9db61ca170"
+      ]
+    }
+  ],
+  "note": "Freeze a manifest only after recording registrations, rights labels, and alignment coverage are stable.",
+  "ready_for_unstratified_composer_claim": false,
+  "recording_count": 200,
+  "recording_registration_conflicts": [],
+  "required_grouping_key": "composition_id",
+  "required_stratification_key": "audio_origin",
+  "rights_status_counts": {
+    "licensed_for_research": 200
+  },
+  "row_count": 200,
+  "schema_version": 2,
+  "score_format_counts": {
+    "mid": 136,
+    "musicxml": 64
+  },
+  "shared_audio_paths": {},
+  "shared_symbolic_paths": {},
+  "source_manifest": "/share/users/student/w/wshelor/piano-clamp/data/cpc_adapter/cpc-2026-08-19.2-v1/piano_clamp_manifest.csv",
+  "source_manifest_sha256": "d6912b1d5fe12a5afb35e3c6d499f0a7222205524d92c32bf5cf8974f8375b50",
+  "status": "warning",
+  "symbolic_ready_rows": 200,
+  "symbolic_registration_conflicts": [
+    {
+      "key": "wrk_0caa93a6d559",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/377_CPM_Sonata_No.13_Bb_major_KV_333_1/S_1509_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/377_CPM_Sonata_No.13_Bb_major_KV_333_1/S_150_A_MAPS_mz_333_1_AkPnStgb.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/377_CPM_Sonata_No.13_Bb_major_KV_333_1/S_1509_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/377_CPM_Sonata_No.13_Bb_major_KV_333_1/S_150_A_MAPS_mz_333_1_AkPnStgb.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_86c64a78f413",
+            "scv_d75ddc922a51"
+          ]
+        }
+      ],
+      "row_count": 2
+    },
+    {
+      "key": "wrk_16208b873f55",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/386_ASAP_Piano_Sonatas_8-1/ASAP_8-1.mid",
+            "sources/asap-dataset/Mozart/Piano_Sonatas/8-1/midi_score.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/386_ASAP_Piano_Sonatas_8-1/ASAP_8-1.mid",
+            "sources/asap-dataset/Mozart/Piano_Sonatas/8-1/midi_score.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_e800c11bc3c7",
+            "scv_f5ed897586b0"
+          ]
+        }
+      ],
+      "row_count": 10
+    },
+    {
+      "key": "wrk_21cadf4d4581",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/368_CPM_Sonata_No.10_C_major_KV_330_1/S_141_A_MAPS_mz_330_1_SptkBGCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/368_CPM_Sonata_No.10_C_major_KV_330_1/S_1500_CPM.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/368_CPM_Sonata_No.10_C_major_KV_330_1/S_141_A_MAPS_mz_330_1_SptkBGCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/368_CPM_Sonata_No.10_C_major_KV_330_1/S_1500_CPM.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_00bf0c43a38f",
+            "scv_2dda0180f5ee"
+          ]
+        }
+      ],
+      "row_count": 2
+    },
+    {
+      "key": "wrk_44c6308a4722",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/373_ASAP_Piano_Sonatas_11-3/ASAP_11-3.mid",
+            "sources/asap-dataset/Mozart/Piano_Sonatas/11-3/xml_score.musicxml"
+          ]
+        },
+        {
+          "field": "mxl_path",
+          "values": [
+            "",
+            "sources/asap-dataset/Mozart/Piano_Sonatas/11-3/xml_score.musicxml"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "",
+            "sources/ACPAS-dataset/subset_S/Mozart/373_ASAP_Piano_Sonatas_11-3/ASAP_11-3.mid"
+          ]
+        },
+        {
+          "field": "score_format",
+          "values": [
+            "mid",
+            "musicxml"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_1a4adc586f7e",
+            "scv_b5b51dca4677"
+          ]
+        }
+      ],
+      "row_count": 2
+    },
+    {
+      "key": "wrk_57b95df3e8e3",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/R_30_A_MAPS_mz_311_1_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/S_140_A_MAPS_mz_311_1_StbgTGd2.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/S_1497_CPM.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/R_30_A_MAPS_mz_311_1_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/S_140_A_MAPS_mz_311_1_StbgTGd2.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/S_1497_CPM.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_289def4fa102",
+            "scv_7431271ca21d",
+            "scv_7b90e90f2ab4"
+          ]
+        }
+      ],
+      "row_count": 3
+    },
+    {
+      "key": "wrk_5e3acc6ed9a0",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/R_32_A_MAPS_mz_331_3_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_146_A_MAPS_mz_331_3_AkPnBsdf.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_147_A_MAPS_mz_331_3_StbgTGd2.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_1505_CPM.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/R_32_A_MAPS_mz_331_3_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_146_A_MAPS_mz_331_3_AkPnBsdf.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_147_A_MAPS_mz_331_3_StbgTGd2.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_1505_CPM.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_4420388aa87c",
+            "scv_531af6bfabae",
+            "scv_d336c1d1285d",
+            "scv_ed2a8a77da25"
+          ]
+        }
+      ],
+      "row_count": 4
+    },
+    {
+      "key": "wrk_6ce03f05af78",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/R_35_A_MAPS_mz_333_3_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/S_1511_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/S_153_A_MAPS_mz_333_3_StbgTGd2.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/R_35_A_MAPS_mz_333_3_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/S_1511_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/S_153_A_MAPS_mz_333_3_StbgTGd2.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_dbad97890e36",
+            "scv_ddc5ff9704cd",
+            "scv_df6e32893b18"
+          ]
+        }
+      ],
+      "row_count": 3
+    },
+    {
+      "key": "wrk_73de062f35d4",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/R_34_A_MAPS_mz_333_2_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_1510_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_151_A_MAPS_mz_333_2_AkPnCGdD.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_152_A_MAPS_mz_333_2_StbgTGd2.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/R_34_A_MAPS_mz_333_2_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_1510_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_151_A_MAPS_mz_333_2_AkPnCGdD.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_152_A_MAPS_mz_333_2_StbgTGd2.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_3140e62ba249",
+            "scv_5e58077ac1b9",
+            "scv_9921c787c684",
+            "scv_c9c8377cb2e3"
+          ]
+        }
+      ],
+      "row_count": 4
+    },
+    {
+      "key": "wrk_95ceb95e11bc",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/R_37_A_MAPS_mz_570_1_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/S_1515_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/S_155_A_MAPS_mz_570_1_StbgTGd2.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/R_37_A_MAPS_mz_570_1_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/S_1515_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/S_155_A_MAPS_mz_570_1_StbgTGd2.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_c0fcd2547280",
+            "scv_c2ba444637a6",
+            "scv_f10724ea41f6"
+          ]
+        }
+      ],
+      "row_count": 3
+    },
+    {
+      "key": "wrk_ab0f834b90b5",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/R_33_A_MAPS_mz_332_2_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/S_149_A_MAPS_mz_332_2_StbgTGd2.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/S_1507_CPM.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/R_33_A_MAPS_mz_332_2_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/S_149_A_MAPS_mz_332_2_StbgTGd2.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/S_1507_CPM.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_2c1989e6f807",
+            "scv_5be436208b42",
+            "scv_f24ff234277b"
+          ]
+        }
+      ],
+      "row_count": 3
+    },
+    {
+      "key": "wrk_ae99d9f81630",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/R_31_A_MAPS_mz_331_2_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_143_A_MAPS_mz_331_2_AkPnBcht.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_144_A_MAPS_mz_331_2_AkPnBsdf.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_145_A_MAPS_mz_331_2_StbgTGd2.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_1504_CPM.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/R_31_A_MAPS_mz_331_2_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_143_A_MAPS_mz_331_2_AkPnBcht.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_144_A_MAPS_mz_331_2_AkPnBsdf.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_145_A_MAPS_mz_331_2_StbgTGd2.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_1504_CPM.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_32d7ecb91a24",
+            "scv_4f3090d8e77e",
+            "scv_8bdc2a36b858",
+            "scv_bf3a83a3c397",
+            "scv_d5eb8bc6d46e"
+          ]
+        }
+      ],
+      "row_count": 5
+    },
+    {
+      "key": "wrk_beabd58e0efb",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/R_36_A_MAPS_mz_545_3_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/S_1514_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/S_154_A_MAPS_mz_545_3_StbgTGd2.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_R/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/R_36_A_MAPS_mz_545_3_ENSTDkCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/S_1514_CPM.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/S_154_A_MAPS_mz_545_3_StbgTGd2.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_53abf1e9c98c",
+            "scv_81c5a13afde3",
+            "scv_fd9963ecb0a0"
+          ]
+        }
+      ],
+      "row_count": 3
+    },
+    {
+      "key": "wrk_e3f8b040fa7a",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/371_CPM_Sonata_No.11_A_major_KV_331_1/S_142_A_MAPS_mz_331_1_SptkBGCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/371_CPM_Sonata_No.11_A_major_KV_331_1/S_1503_CPM.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/371_CPM_Sonata_No.11_A_major_KV_331_1/S_142_A_MAPS_mz_331_1_SptkBGCl.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/371_CPM_Sonata_No.11_A_major_KV_331_1/S_1503_CPM.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_b5b64d494d36",
+            "scv_dd659a7e5178"
+          ]
+        }
+      ],
+      "row_count": 2
+    },
+    {
+      "key": "wrk_ea0fb259619c",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/374_CPM_Sonata_No.12_F_major_KV_332_1/S_148_A_MAPS_mz_332_1_AkPnBsdf.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/374_CPM_Sonata_No.12_F_major_KV_332_1/S_1506_CPM.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "sources/ACPAS-dataset/subset_S/Mozart/374_CPM_Sonata_No.12_F_major_KV_332_1/S_148_A_MAPS_mz_332_1_AkPnBsdf.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/374_CPM_Sonata_No.12_F_major_KV_332_1/S_1506_CPM.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_43dbf1fe49f9",
+            "scv_988b7201734c"
+          ]
+        }
+      ],
+      "row_count": 2
+    },
+    {
+      "key": "wrk_f1aa6de79926",
+      "key_field": "movement_id",
+      "mismatches": [
+        {
+          "field": "score_path",
+          "values": [
+            "data/downloads/pianocore/1.0/refined/Mozart,_Wolfgang_Amadeus/Fantasia_in_C_minor,_K.475/score_ASAP_refined.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/364_ASAP_Fantasie_475/ASAP_Fantasie_475.mid"
+          ]
+        },
+        {
+          "field": "midi_path",
+          "values": [
+            "data/downloads/pianocore/1.0/refined/Mozart,_Wolfgang_Amadeus/Fantasia_in_C_minor,_K.475/score_ASAP_refined.mid",
+            "sources/ACPAS-dataset/subset_S/Mozart/364_ASAP_Fantasie_475/ASAP_Fantasie_475.mid"
+          ]
+        },
+        {
+          "field": "score_version_id",
+          "values": [
+            "scv_08736e8076e7",
+            "scv_c2fb5dedf769"
+          ]
+        }
+      ],
+      "row_count": 3
+    }
+  ],
+  "unauthorized_audio_rows": 0,
+  "warnings": [
+    "movement_id 'wrk_0caa93a6d559' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_S/Mozart/377_CPM_Sonata_No.13_Bb_major_KV_333_1/S_1509_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/377_CPM_Sonata_No.13_Bb_major_KV_333_1/S_150_A_MAPS_mz_333_1_AkPnStgb.mid'], midi_path=['sources/ACPAS-dataset/subset_S/Mozart/377_CPM_Sonata_No.13_Bb_major_KV_333_1/S_1509_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/377_CPM_Sonata_No.13_Bb_major_KV_333_1/S_150_A_MAPS_mz_333_1_AkPnStgb.mid'], score_version_id=['scv_86c64a78f413', 'scv_d75ddc922a51']",
+    "movement_id 'wrk_16208b873f55' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_S/Mozart/386_ASAP_Piano_Sonatas_8-1/ASAP_8-1.mid', 'sources/asap-dataset/Mozart/Piano_Sonatas/8-1/midi_score.mid'], midi_path=['sources/ACPAS-dataset/subset_S/Mozart/386_ASAP_Piano_Sonatas_8-1/ASAP_8-1.mid', 'sources/asap-dataset/Mozart/Piano_Sonatas/8-1/midi_score.mid'], score_version_id=['scv_e800c11bc3c7', 'scv_f5ed897586b0']",
+    "movement_id 'wrk_21cadf4d4581' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_S/Mozart/368_CPM_Sonata_No.10_C_major_KV_330_1/S_141_A_MAPS_mz_330_1_SptkBGCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/368_CPM_Sonata_No.10_C_major_KV_330_1/S_1500_CPM.mid'], midi_path=['sources/ACPAS-dataset/subset_S/Mozart/368_CPM_Sonata_No.10_C_major_KV_330_1/S_141_A_MAPS_mz_330_1_SptkBGCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/368_CPM_Sonata_No.10_C_major_KV_330_1/S_1500_CPM.mid'], score_version_id=['scv_00bf0c43a38f', 'scv_2dda0180f5ee']",
+    "movement_id 'wrk_44c6308a4722' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_S/Mozart/373_ASAP_Piano_Sonatas_11-3/ASAP_11-3.mid', 'sources/asap-dataset/Mozart/Piano_Sonatas/11-3/xml_score.musicxml'], mxl_path=['', 'sources/asap-dataset/Mozart/Piano_Sonatas/11-3/xml_score.musicxml'], midi_path=['', 'sources/ACPAS-dataset/subset_S/Mozart/373_ASAP_Piano_Sonatas_11-3/ASAP_11-3.mid'], score_format=['mid', 'musicxml'], score_version_id=['scv_1a4adc586f7e', 'scv_b5b51dca4677']",
+    "movement_id 'wrk_57b95df3e8e3' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_R/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/R_30_A_MAPS_mz_311_1_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/S_140_A_MAPS_mz_311_1_StbgTGd2.mid', 'sources/ACPAS-dataset/subset_S/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/S_1497_CPM.mid'], midi_path=['sources/ACPAS-dataset/subset_R/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/R_30_A_MAPS_mz_311_1_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/S_140_A_MAPS_mz_311_1_StbgTGd2.mid', 'sources/ACPAS-dataset/subset_S/Mozart/365_CPM_Sonata_No.8_D_major_KV_311_1/S_1497_CPM.mid'], score_version_id=['scv_289def4fa102', 'scv_7431271ca21d', 'scv_7b90e90f2ab4']",
+    "movement_id 'wrk_5e3acc6ed9a0' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_R/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/R_32_A_MAPS_mz_331_3_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_146_A_MAPS_mz_331_3_AkPnBsdf.mid', 'sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_147_A_MAPS_mz_331_3_StbgTGd2.mid', 'sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_1505_CPM.mid'], midi_path=['sources/ACPAS-dataset/subset_R/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/R_32_A_MAPS_mz_331_3_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_146_A_MAPS_mz_331_3_AkPnBsdf.mid', 'sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_147_A_MAPS_mz_331_3_StbgTGd2.mid', 'sources/ACPAS-dataset/subset_S/Mozart/373_CPM_Sonata_No.11_A_major_KV_331_3_Alla_Turca/S_1505_CPM.mid'], score_version_id=['scv_4420388aa87c', 'scv_531af6bfabae', 'scv_d336c1d1285d', 'scv_ed2a8a77da25']",
+    "movement_id 'wrk_6ce03f05af78' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_R/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/R_35_A_MAPS_mz_333_3_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/S_1511_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/S_153_A_MAPS_mz_333_3_StbgTGd2.mid'], midi_path=['sources/ACPAS-dataset/subset_R/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/R_35_A_MAPS_mz_333_3_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/S_1511_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/379_CPM_Sonata_No.13_Bb_major_KV_333_3/S_153_A_MAPS_mz_333_3_StbgTGd2.mid'], score_version_id=['scv_dbad97890e36', 'scv_ddc5ff9704cd', 'scv_df6e32893b18']",
+    "movement_id 'wrk_73de062f35d4' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_R/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/R_34_A_MAPS_mz_333_2_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_1510_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_151_A_MAPS_mz_333_2_AkPnCGdD.mid', 'sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_152_A_MAPS_mz_333_2_StbgTGd2.mid'], midi_path=['sources/ACPAS-dataset/subset_R/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/R_34_A_MAPS_mz_333_2_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_1510_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_151_A_MAPS_mz_333_2_AkPnCGdD.mid', 'sources/ACPAS-dataset/subset_S/Mozart/378_CPM_Sonata_No.13_Bb_major_KV_333_2/S_152_A_MAPS_mz_333_2_StbgTGd2.mid'], score_version_id=['scv_3140e62ba249', 'scv_5e58077ac1b9', 'scv_9921c787c684', 'scv_c9c8377cb2e3']",
+    "movement_id 'wrk_95ceb95e11bc' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_R/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/R_37_A_MAPS_mz_570_1_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/S_1515_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/S_155_A_MAPS_mz_570_1_StbgTGd2.mid'], midi_path=['sources/ACPAS-dataset/subset_R/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/R_37_A_MAPS_mz_570_1_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/S_1515_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/383_CPM_Sonata_No.17_Bb_major_KV_570_1/S_155_A_MAPS_mz_570_1_StbgTGd2.mid'], score_version_id=['scv_c0fcd2547280', 'scv_c2ba444637a6', 'scv_f10724ea41f6']",
+    "movement_id 'wrk_ab0f834b90b5' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_R/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/R_33_A_MAPS_mz_332_2_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/S_149_A_MAPS_mz_332_2_StbgTGd2.mid', 'sources/ACPAS-dataset/subset_S/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/S_1507_CPM.mid'], midi_path=['sources/ACPAS-dataset/subset_R/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/R_33_A_MAPS_mz_332_2_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/S_149_A_MAPS_mz_332_2_StbgTGd2.mid', 'sources/ACPAS-dataset/subset_S/Mozart/375_CPM_Sonata_No.12_F_major_KV_332_2/S_1507_CPM.mid'], score_version_id=['scv_2c1989e6f807', 'scv_5be436208b42', 'scv_f24ff234277b']",
+    "movement_id 'wrk_ae99d9f81630' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_R/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/R_31_A_MAPS_mz_331_2_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_143_A_MAPS_mz_331_2_AkPnBcht.mid', 'sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_144_A_MAPS_mz_331_2_AkPnBsdf.mid', 'sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_145_A_MAPS_mz_331_2_StbgTGd2.mid', 'sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_1504_CPM.mid'], midi_path=['sources/ACPAS-dataset/subset_R/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/R_31_A_MAPS_mz_331_2_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_143_A_MAPS_mz_331_2_AkPnBcht.mid', 'sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_144_A_MAPS_mz_331_2_AkPnBsdf.mid', 'sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_145_A_MAPS_mz_331_2_StbgTGd2.mid', 'sources/ACPAS-dataset/subset_S/Mozart/372_CPM_Sonata_No.11_A_major_KV_331_2/S_1504_CPM.mid'], score_version_id=['scv_32d7ecb91a24', 'scv_4f3090d8e77e', 'scv_8bdc2a36b858', 'scv_bf3a83a3c397', 'scv_d5eb8bc6d46e']",
+    "movement_id 'wrk_beabd58e0efb' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_R/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/R_36_A_MAPS_mz_545_3_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/S_1514_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/S_154_A_MAPS_mz_545_3_StbgTGd2.mid'], midi_path=['sources/ACPAS-dataset/subset_R/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/R_36_A_MAPS_mz_545_3_ENSTDkCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/S_1514_CPM.mid', 'sources/ACPAS-dataset/subset_S/Mozart/382_CPM_Sonata_No.16_C_major_Sonata_facile_KV_545_3/S_154_A_MAPS_mz_545_3_StbgTGd2.mid'], score_version_id=['scv_53abf1e9c98c', 'scv_81c5a13afde3', 'scv_fd9963ecb0a0']",
+    "movement_id 'wrk_e3f8b040fa7a' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_S/Mozart/371_CPM_Sonata_No.11_A_major_KV_331_1/S_142_A_MAPS_mz_331_1_SptkBGCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/371_CPM_Sonata_No.11_A_major_KV_331_1/S_1503_CPM.mid'], midi_path=['sources/ACPAS-dataset/subset_S/Mozart/371_CPM_Sonata_No.11_A_major_KV_331_1/S_142_A_MAPS_mz_331_1_SptkBGCl.mid', 'sources/ACPAS-dataset/subset_S/Mozart/371_CPM_Sonata_No.11_A_major_KV_331_1/S_1503_CPM.mid'], score_version_id=['scv_b5b64d494d36', 'scv_dd659a7e5178']",
+    "movement_id 'wrk_ea0fb259619c' has conflicting registrations: score_path=['sources/ACPAS-dataset/subset_S/Mozart/374_CPM_Sonata_No.12_F_major_KV_332_1/S_148_A_MAPS_mz_332_1_AkPnBsdf.mid', 'sources/ACPAS-dataset/subset_S/Mozart/374_CPM_Sonata_No.12_F_major_KV_332_1/S_1506_CPM.mid'], midi_path=['sources/ACPAS-dataset/subset_S/Mozart/374_CPM_Sonata_No.12_F_major_KV_332_1/S_148_A_MAPS_mz_332_1_AkPnBsdf.mid', 'sources/ACPAS-dataset/subset_S/Mozart/374_CPM_Sonata_No.12_F_major_KV_332_1/S_1506_CPM.mid'], score_version_id=['scv_43dbf1fe49f9', 'scv_988b7201734c']",
+    "movement_id 'wrk_f1aa6de79926' has conflicting registrations: score_path=['data/downloads/pianocore/1.0/refined/Mozart,_Wolfgang_Amadeus/Fantasia_in_C_minor,_K.475/score_ASAP_refined.mid', 'sources/ACPAS-dataset/subset_S/Mozart/364_ASAP_Fantasie_475/ASAP_Fantasie_475.mid'], midi_path=['data/downloads/pianocore/1.0/refined/Mozart,_Wolfgang_Amadeus/Fantasia_in_C_minor,_K.475/score_ASAP_refined.mid', 'sources/ACPAS-dataset/subset_S/Mozart/364_ASAP_Fantasie_475/ASAP_Fantasie_475.mid'], score_version_id=['scv_08736e8076e7', 'scv_c2fb5dedf769']"
+  ],
+  "work_count": 65
+}

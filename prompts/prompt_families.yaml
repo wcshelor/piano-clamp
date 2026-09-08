@@ -1,0 +1,14 @@
+schema_version: 1
+families:
+  literal: Literal and formal observations
+  rhythm: Rhythm and metre
+  texture: Texture and accompaniment
+  articulation: Articulation and pianistic surface
+  performance: Dynamics and performance character
+  emotion: Emotional and affective character
+  historical: Historical style
+  comparative: Direct Mozart and Chopin comparisons
+  matched_pair: Positive and negative poles grouped by subfamily
+  combined: Multi-descriptor prompts
+matched_pair_rule: Group by subfamily and subtract negative-pole similarity from positive-pole similarity.
+

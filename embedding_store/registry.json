@@ -1,0 +1,13 @@
+{
+  "bundles": [
+    "runs/20260822T130225Z-4ca168a165ad/text",
+    "runs/20260822T145043Z-2e51e949df71/passages",
+    "runs/20260822T153905Z-2e51e949df71/passages",
+    "runs/20260824T205205Z-dc6dd67ba976/passages",
+    "runs/20260824T224507Z-a1c8de22a9f7/text"
+  ],
+  "duplicate_skips": 0,
+  "failed_count": 2995,
+  "row_count": 24652,
+  "successful_count": 21657
+}

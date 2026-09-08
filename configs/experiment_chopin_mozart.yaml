@@ -1,0 +1,73 @@
+experiment:
+  run_name: chopin_mozart_v0
+  title: Chopin–Mozart CLaMP 3 proof of concept
+  composers:
+    - Frédéric Chopin
+    - Wolfgang Amadeus Mozart
+
+data:
+  # Required: each source file is already one passage. Bar fields are provenance;
+  # this pipeline deliberately does not crop measures from complete scores.
+  passages_presegmented: true
+  check_musicxml_parse: true
+  # Allows a pickup/partial measure without blocking preflight.
+  measure_count_tolerance: 1
+
+paths:
+  data_root: ${MUSIC_DATA_ROOT}
+  run_root: ${CLAMP3_RUN_ROOT}
+  manifest: manifests/chopin_mozart.csv
+  # Optional; required only by `embed-audio`.
+  audio_manifest: manifests/chopin_mozart_audio.csv
+
+clamp3:
+  upstream_commit: 9016d2b0c8d12d1aa79c2e0ab201e6822bdc83a8
+  embedding_dimension: 768
+  global_embeddings: true
+  verify_checkpoint_sha256: true
+
+models:
+  c2:
+    modality: symbolic_and_text
+    checkpoint: models/clamp3-c2/weights_clamp3_c2_h_size_768_t_model_FacebookAI_xlm-roberta-base_t_length_128_a_size_768_a_layers_12_a_length_128_s_size_768_s_layers_12_p_size_64_p_length_512.pth
+    sha256: e6fb0d139b24a1ec20836bb65bd652303d570ea9af2cddb20a1fc161421d64af
+  saas:
+    modality: audio_and_text
+    checkpoint: models/clamp3-saas/weights_clamp3_saas_h_size_768_t_model_FacebookAI_xlm-roberta-base_t_length_128_a_size_768_a_layers_12_a_length_128_s_size_768_s_layers_12_p_size_64_p_length_512.pth
+
+prompt_files:
+  - configs/prompts/composers.yaml
+  - configs/prompts/descriptors.yaml
+  - configs/prompts/robustness.yaml
+
+analysis:
+  contrast_order:
+    - Frédéric Chopin
+    - Wolfgang Amadeus Mozart
+  primary_prompt_ids:
+    - composer_chopin
+    - composer_mozart
+    - lyrical_expressive
+    - chromatic_harmony
+    - classical_period
+    - romantic_period
+    - transparent_homophony
+    - melodic_ornamentation
+  robustness_pairs:
+    - primary: composer_chopin
+      variant: composer_chopin_paraphrase
+    - primary: composer_mozart
+      variant: composer_mozart_paraphrase
+    - primary: classical_period
+      variant: classical_period_paraphrase
+    - primary: romantic_period
+      variant: romantic_period_paraphrase
+  bootstrap_iterations: 5000
+  permutation_iterations: 10000
+  alpha: 0.05
+  random_seed: 20260819
+  max_pair_samples: 100000
+  require_features: true
+
+audio:
+  mert_model: m-a-p/MERT-v1-95M

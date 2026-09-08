@@ -1,0 +1,11 @@
+{
+  "configuration_hash": "34b2568c03a08dc52fb673653a149301ac8d815dc776ed7ce5837470334653b9",
+  "created_at": "2026-08-21T11:45:41.270237+00:00",
+  "frozen_manifest_sha256": "d6912b1d5fe12a5afb35e3c6d499f0a7222205524d92c32bf5cf8974f8375b50",
+  "label": "pre-render-2026-08-21",
+  "schema_version": 1,
+  "source_manifest": "${REPOSITORY_ROOT}/data/cpc_adapter/cpc-2026-08-19.2-v1/piano_clamp_manifest.csv",
+  "source_manifest_sha256": "d6912b1d5fe12a5afb35e3c6d499f0a7222205524d92c32bf5cf8974f8375b50",
+  "study_readiness_path": "study_readiness.json",
+  "study_readiness_status": "warning"
+}

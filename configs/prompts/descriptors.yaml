@@ -1,0 +1,17 @@
+prompts:
+  - id: lyrical_expressive
+    text: Lyrical, expressive piano music.
+  - id: chromatic_harmony
+    text: Chromatic harmonic language.
+  - id: classical_period
+    text: Classical-period piano music.
+  - id: romantic_period
+    text: Romantic-period piano music.
+  - id: baroque_period
+    text: Baroque keyboard music.
+  - id: transparent_homophony
+    text: Transparent homophonic texture.
+  - id: melodic_ornamentation
+    text: Expressive melodic ornamentation.
+  - id: contrapuntal_texture
+    text: Contrapuntal keyboard texture with independent voices.
