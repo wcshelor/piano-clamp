@@ -1,6 +1,6 @@
 # Piano CLaMP
 
-Test. Piano CLaMP is a reproducible embedding-and-analysis pipeline for a focused
+Piano CLaMP is a reproducible embedding-and-analysis pipeline for a focused
 computational musicology project on piano music. It does not train or fine-tune models. It stages symbolic scores,
 text prompts, and optionally authorized local audio through pinned CLaMP 3
 checkpoints, writes provenance-rich embedding bundles, and keeps an append-only
