@@ -1,7 +1,11 @@
-# Preregistered proof-of-concept analysis
+# Preregistered analysis plan (legacy Chopin–Mozart example)
 
-This document and the `analysis` block in the experiment YAML fix the initial
-analysis before real similarities are inspected.
+This document and the `analysis` block in `configs/experiment_chopin_mozart.yaml`
+(legacy example; the pipeline is composer-agnostic) fix the initial analysis
+before real similarities are inspected. piano-clamp validates manifests,
+extracts features, creates embeddings, analyzes embeddings, and renders
+review/result artifacts from external datasets; the analysis here is an example
+instantiation for two composers.
 
 ## Units and contrast
 

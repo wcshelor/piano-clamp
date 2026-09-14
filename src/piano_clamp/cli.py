@@ -1,4 +1,10 @@
-"""Command-line interface for the Chopin–Mozart proof of concept."""
+"""Command-line interface for the piano-clamp dataset-consumer pipeline.
+
+piano-clamp validates manifests, extracts features, creates embeddings, analyzes
+embeddings, and renders review/result artifacts from external datasets. Dataset
+creation and source-asset rendering (including audio-from-MIDI) belong outside
+this repo, in the shared dataset layer.
+"""
 
 from __future__ import annotations
 

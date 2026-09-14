@@ -18,8 +18,9 @@ sys.path.insert(0, str(ROOT / "src"))
 from piano_clamp.embedding_io import read_embedding_bundle  # noqa: E402
 
 
-CHOPIN = "Frédéric Chopin"
-MOZART = "Wolfgang Amadeus Mozart"
+# Generic multi-composer analysis. Legacy example used CHOPIN="Frédéric Chopin"
+# and MOZART="Wolfgang Amadeus Mozart"; filtering is now explicit via
+# --composer-a/--composer-b or all composers present are compared.
 
 
 def _normalize(matrix: np.ndarray) -> np.ndarray:
@@ -185,58 +186,120 @@ def _family_profiles(prompt_work: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def _cross_composer_tables(works: pd.DataFrame, work_matrix: np.ndarray) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    composers = works["composer"].astype(str).to_numpy()
-    if not np.any(composers == CHOPIN) or not np.any(composers == MOZART):
+def _cross_composer_tables(
+    works: pd.DataFrame,
+    work_matrix: np.ndarray,
+    *,
+    composer_a: str | None = None,
+    composer_b: str | None = None,
+) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+    if works.empty or work_matrix.shape[0] == 0:
         empty = pd.DataFrame()
         return empty, empty, empty
-    chopin_indices = np.flatnonzero(composers == CHOPIN)
-    mozart_indices = np.flatnonzero(composers == MOZART)
-    pair_values = work_matrix[chopin_indices] @ work_matrix[mozart_indices].T
-    pair_rows = []
-    for left_pos, left_index in enumerate(chopin_indices):
-        for right_pos, right_index in enumerate(mozart_indices):
-            left = works.iloc[int(left_index)]
-            right = works.iloc[int(right_index)]
+    composers = works["composer"].astype(str).to_numpy()
+    unique_composers = sorted(set(composers))
+
+    # Optional explicit pair filter (e.g., legacy Chopin/Mozart).
+    if composer_a is not None or composer_b is not None:
+        if not composer_a or not composer_b:
+            raise ValueError("--composer-a and --composer-b must be provided together")
+        if composer_a == composer_b:
+            raise ValueError("--composer-a and --composer-b must be distinct")
+        requested = {composer_a, composer_b}
+        mask = np.isin(composers, list(requested))
+        if not np.any(mask):
+            empty = pd.DataFrame()
+            return empty, empty, empty
+        # Restrict to the requested pair for nearest/centroid tables.
+        filtered_indices = np.flatnonzero(mask)
+        works_filtered = works.iloc[filtered_indices].reset_index(drop=True)
+        matrix_filtered = work_matrix[filtered_indices]
+        composers_filtered = works_filtered["composer"].astype(str).to_numpy()
+        # Recurse with generic logic on the filtered subset without further pair args.
+        return _cross_composer_tables(works_filtered, matrix_filtered)
+
+    if len(unique_composers) < 2:
+        empty = pd.DataFrame()
+        return empty, empty, empty
+
+    # Generic cross-composer nearest works: all unordered pairs with different composers.
+    n = len(works)
+    pair_rows: list[dict[str, object]] = []
+    for i in range(n):
+        for j in range(i + 1, n):
+            if composers[i] == composers[j]:
+                continue
+            left = works.iloc[int(i)]
+            right = works.iloc[int(j)]
+            sim = float(work_matrix[i] @ work_matrix[j])
+            # Keep deterministic ordering by composer name for a/b assignment,
+            # but preserve similarity value (symmetric).
+            if str(left["composer"]) <= str(right["composer"]):
+                a, b = left, right
+            else:
+                a, b = right, left
             pair_rows.append(
                 {
-                    "chopin_work_id": left["work_id"],
-                    "mozart_work_id": right["work_id"],
-                    "cosine_similarity": float(pair_values[left_pos, right_pos]),
-                    "chopin_passage_count": int(left["passage_count"]),
-                    "mozart_passage_count": int(right["passage_count"]),
+                    "work_id_a": a["work_id"],
+                    "composer_a": a["composer"],
+                    "work_id_b": b["work_id"],
+                    "composer_b": b["composer"],
+                    "cosine_similarity": sim,
+                    "passage_count_a": int(a["passage_count"]),
+                    "passage_count_b": int(b["passage_count"]),
                 }
             )
-    nearest_pairs = pd.DataFrame(pair_rows).sort_values("cosine_similarity", ascending=False).reset_index(drop=True)
-    nearest_pairs["rank"] = np.arange(1, len(nearest_pairs) + 1)
+    if pair_rows:
+        nearest_pairs = pd.DataFrame(pair_rows).sort_values("cosine_similarity", ascending=False).reset_index(drop=True)
+        nearest_pairs["rank"] = np.arange(1, len(nearest_pairs) + 1)
+    else:
+        nearest_pairs = pd.DataFrame(pair_rows)
 
-    centroid_rows = []
+    # Generic centroid scores: compare each work to its own centroid vs best other centroid.
+    composer_to_indices: dict[str, np.ndarray] = {
+        c: np.flatnonzero(composers == c) for c in unique_composers
+    }
+    centroid_rows: list[dict[str, object]] = []
     for index, work in works.iterrows():
-        own = work["composer"]
-        other = MOZART if own == CHOPIN else CHOPIN if own == MOZART else ""
+        own = str(work["composer"])
         own_members = np.flatnonzero((composers == own) & (np.arange(len(works)) != index))
-        other_members = np.flatnonzero(composers == other)
-        if not len(own_members) or not len(other_members):
+        if len(own_members) == 0:
             continue
         own_centroid = _normalize(work_matrix[own_members].mean(axis=0, keepdims=True))[0]
-        other_centroid = _normalize(work_matrix[other_members].mean(axis=0, keepdims=True))[0]
         own_score = float(work_matrix[index] @ own_centroid)
-        other_score = float(work_matrix[index] @ other_centroid)
+        best_other: str | None = None
+        best_score: float | None = None
+        for other in unique_composers:
+            if other == own:
+                continue
+            other_members = composer_to_indices[other]
+            if len(other_members) == 0:
+                continue
+            other_centroid = _normalize(work_matrix[other_members].mean(axis=0, keepdims=True))[0]
+            score = float(work_matrix[index] @ other_centroid)
+            if best_score is None or score > best_score:
+                best_score = score
+                best_other = other
+        if best_other is None or best_score is None:
+            continue
         centroid_rows.append(
             {
                 "work_id": work["work_id"],
                 "composer": own,
-                "opposite_composer": other,
+                "opposite_composer": best_other,
                 "similarity_to_own_composer_centroid": own_score,
-                "similarity_to_opposite_composer_centroid": other_score,
-                "own_minus_opposite_margin": own_score - other_score,
-                "opposite_minus_own_score": other_score - own_score,
+                "similarity_to_opposite_composer_centroid": best_score,
+                "own_minus_opposite_margin": own_score - best_score,
+                "opposite_minus_own_score": best_score - own_score,
                 "passage_count": int(work["passage_count"]),
                 "recording_count": int(work["recording_count"]),
             }
         )
-    centroid_scores = pd.DataFrame(centroid_rows).sort_values("own_minus_opposite_margin", ascending=True)
-    ambiguous = centroid_scores.head(min(20, len(centroid_scores))).copy()
+    if centroid_rows:
+        centroid_scores = pd.DataFrame(centroid_rows).sort_values("own_minus_opposite_margin", ascending=True).reset_index(drop=True)
+    else:
+        centroid_scores = pd.DataFrame(centroid_rows)
+    ambiguous = centroid_scores.head(min(20, len(centroid_scores))).copy() if len(centroid_scores) else centroid_scores.copy()
     return nearest_pairs, centroid_scores, ambiguous
 
 
@@ -275,7 +338,12 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
         prompt_top_works,
         top_passages=args.top_passages,
     )
-    nearest_pairs, centroid_scores, ambiguous = _cross_composer_tables(works, work_matrix)
+    nearest_pairs, centroid_scores, ambiguous = _cross_composer_tables(
+        works,
+        work_matrix,
+        composer_a=getattr(args, "composer_a", None),
+        composer_b=getattr(args, "composer_b", None),
+    )
 
     prompt_work.to_csv(tables / "prompt_work_scores.csv", index=False)
     prompt_top_works.to_csv(tables / "prompt_top_works.csv", index=False)
@@ -323,6 +391,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             "top_prompts": args.top_prompts,
             "top_passages": args.top_passages,
             "outlier_z": args.outlier_z,
+            "composer_a": getattr(args, "composer_a", None),
+            "composer_b": getattr(args, "composer_b", None),
         },
     }
     if len(prompt_outliers):
@@ -351,6 +421,16 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--top-prompts", type=int, default=10)
     parser.add_argument("--top-passages", type=int, default=5)
     parser.add_argument("--outlier-z", type=float, default=2.0)
+    parser.add_argument(
+        "--composer-a",
+        default=None,
+        help="Optional first composer for a filtered cross-composer pair analysis (requires --composer-b).",
+    )
+    parser.add_argument(
+        "--composer-b",
+        default=None,
+        help="Optional second composer for a filtered cross-composer pair analysis (requires --composer-a).",
+    )
     return parser
 
 

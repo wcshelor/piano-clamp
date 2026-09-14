@@ -61,9 +61,7 @@ def _slug(value: str) -> str:
 
 
 def stable_passage_id(record: Mapping[str, Any], start: int, end: int) -> str:
-    composer = "chopin" if "chopin" in _slug(str(record.get("composer", ""))) else (
-        "mozart" if "mozart" in _slug(str(record.get("composer", ""))) else _slug(str(record.get("composer", "")))
-    )
+    composer = _slug(str(record.get("composer", "")))
     recording = _slug(str(record.get("recording_id") or "score"))
     collection = _slug(str(record.get("source_collection") or "corpus"))
     return "_".join(

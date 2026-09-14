@@ -8,10 +8,14 @@ or generated artifacts from `mxl-clap`.
 ## Build
 
 ```bash
-export PIANO_CLAMP_CORPUS_ROOT=/path/to/classical-performance-corpus
+export PIANO_CLAMP_DATASETS_ROOT=/path/to/datasets  # or PIANO_DATASETS_ROOT / PIANO_CLAMP_CORPUS_ROOT (alias)
+export PIANO_CLAMP_CORPUS_ROOT="$PIANO_CLAMP_DATASETS_ROOT/classical-performance-corpus"
 python scripts/prepare_cpc_adapter.py \
   --corpus-root "$PIANO_CLAMP_CORPUS_ROOT" \
   --output-root data/cpc_adapter/cpc-2026-08-19.2-v1
+# By default all eligible composers are retained. To filter, pass explicit values:
+#   --composer Chopin --composer Mozart
+# or use configs/experiment_chopin_mozart.yaml as a legacy example filter.
 ```
 
 The default verifies every score and audio SHA-256 against CPC's canonical
@@ -24,10 +28,13 @@ source release or adapter logic changes.
 corpus exports. The normal path is to derive the study subset directly from
 `data/canonical/` plus corpus release metadata.
 
-The source corpus remains read-only. `adapter_root` in
+The source corpus/dataset remains read-only. `adapter_root` in
 `configs/embedding_config.yaml` points downstream commands at the generated
-directory while all score and audio paths remain relative to
-`PIANO_CLAMP_CORPUS_ROOT`.
+directory while all score and audio paths remain relative to the dataset root
+(`PIANO_CLAMP_DATASETS_ROOT`/`PIANO_CLAMP_CORPUS_ROOT`). piano-clamp validates
+manifests, extracts features, creates embeddings, analyzes embeddings, and
+renders review/result artifacts; dataset creation and audio-from-MIDI rendering
+belong in the dataset layer, not here.
 
 ## Outputs
 
@@ -52,7 +59,9 @@ boundaries. CPC note anchors are interpolated through score time; this route
 requires `music21`. Container duration is only an upper cap and never extends
 an alignment beyond its final anchor.
 
-For CPC release `cpc-2026-08-19.2`, the validated quick-audit output contains:
+For CPC release `cpc-2026-08-19.2` with all eligible composers (example: filtering to
+Chopin/Mozart via `--composer Chopin --composer Mozart`), the validated
+quick-audit output contains:
 
 - 200 score/audio/alignment records;
 - 41,994 measure timing rows with no duplicate or non-positive intervals;
@@ -60,6 +69,9 @@ For CPC release `cpc-2026-08-19.2`, the validated quick-audit output contains:
 - one real Mozart recording and 91 synthetic Mozart recordings across 41
   parent compositions; and
 - 16 excluded Mozart rows whose purported score path is a metadata CSV.
+
+This is an example filtered output; the unfiltered adapter retains all eligible
+composers by default.
 
 ## Analysis rules
 

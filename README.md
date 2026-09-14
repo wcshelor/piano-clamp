@@ -1,21 +1,28 @@
 # Piano CLaMP
 
-Piano CLaMP is a reproducible embedding-and-analysis pipeline for a focused
-computational musicology project on piano music. It does not train or fine-tune models. It stages symbolic scores,
-text prompts, and optionally authorized local audio through pinned CLaMP 3
-checkpoints, writes provenance-rich embedding bundles, and keeps an append-only
-registry of what has already been embedded.
+Piano CLaMP is a reproducible dataset-consumer pipeline for piano music. It
+validates manifests, extracts features, creates embeddings, analyzes embeddings,
+and renders review/result artifacts from existing dataset manifests and assets.
+It does not train or fine-tune models. It stages symbolic scores, text prompts,
+and optionally authorized local audio through pinned CLaMP 3 checkpoints, writes
+provenance-rich embedding bundles, and keeps an append-only registry of what has
+already been embedded. Dataset creation and source-asset rendering (including
+audio-from-MIDI or corpus-scale MusicXML-to-audio) belong in the external
+shared dataset layer, not in piano-clamp.
 
 The project’s main goals are:
 
+- validate external dataset manifests and alignment sidecars without owning the datasets
 - embed symbolic scores, prompt texts, and score/audio passages in a controlled way
 - preserve enough metadata to distinguish composer, work, movement, recording, and passage windowing
 - support incremental HPC runs without losing prior work
 - make later similarity analysis and manual review possible without re-deriving everything
 
-This repository is the active home of that workflow. It reads
-`classical-performance-corpus` as an external input and does not write back into
-that corpus.
+This repository is the active home of that workflow. It consumes external
+datasets (for example `classical-performance-corpus` under
+`PIANO_CLAMP_DATASETS_ROOT` or `PIANO_DATASETS_ROOT`; `PIANO_CLAMP_CORPUS_ROOT`
+remains supported as an alias) as read-only inputs and does not write back into
+them.
 
 ## What The Repo Does
 
@@ -79,14 +86,20 @@ The most important Python modules are:
 The default portable config is [configs/embedding_config.yaml](configs/embedding_config.yaml).
 It assumes:
 
-- a read-only external corpus root
-- a local CPC adapter under `data/cpc_adapter/`
+- a read-only external dataset root (prefer `PIANO_CLAMP_DATASETS_ROOT` or
+  `PIANO_DATASETS_ROOT`; `PIANO_CLAMP_CORPUS_ROOT` remains supported as an alias)
+- a locally generated adapter under `data/cpc_adapter/` (derived, not owned)
 - local outputs for embeddings, logs, analysis, and temp files
 
-The normal local override mechanism is [configs/paths.yaml](configs/paths.yaml).
+piano-clamp validates manifests, extracts features, creates embeddings, analyzes
+embeddings, and renders review/result artifacts; dataset creation and
+audio-from-MIDI rendering belong in the dataset layer, not here.
+
+The normal local override mechanism is [configs/paths.yaml](configs/paths.yaml) (see
+[configs/paths.example.yaml](configs/paths.example.yaml)).
 `load_pipeline_config()` auto-merges that file when you pass
 `configs/embedding_config.yaml`, so in normal repo usage you should not need to
-manually export `PIANO_CLAMP_CORPUS_ROOT` every time.
+manually export the dataset root every time.
 
 In practice:
 
@@ -200,6 +213,9 @@ python scripts/embed_text_prompts.py \
 
 ### 4. Embed symbolic scores
 
+Filtering by composer is an explicit opt-in; when `--composer` is omitted all
+eligible composers are processed. The example below filters to Chopin only:
+
 ```bash
 python scripts/embed_symbolic_scores.py \
   --config configs/embedding_config.yaml \
@@ -209,7 +225,8 @@ python scripts/embed_symbolic_scores.py \
 
 ### 5. Embed passages
 
-Score-symbolic passages, including fixed 4/8/16-bar windows:
+Score-symbolic passages, including fixed 4/8/16-bar windows. As with symbolic
+scores, `--composer` is an explicit opt-in filter (example: Chopin):
 
 ```bash
 python scripts/embed_passages.py \
@@ -235,7 +252,7 @@ python scripts/embed_passages.py \
   --device cuda \
   --modality symbolic \
   --source-material performance_midi \
-  --composer Chopin \
+  --composer Chopin \  # example filter; omit to process all composers
   --mode 4 \
   --mode 8 \
   --mode 16 \
@@ -269,7 +286,7 @@ artifacts:
 ```bash
 python scripts/export_passage_review.py \
   --config configs/embedding_config.yaml \
-  --composer Chopin \
+  --composer Chopin \  # example filter; omit to export all composers
   --mode 4 \
   --mode 8 \
   --mode 16 \

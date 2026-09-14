@@ -1,7 +1,14 @@
-# Portable defaults for the complete embedding pipeline. Point the environment
-# variable at a read-only checkout of classical-performance-corpus.
+# Portable defaults for the complete embedding pipeline.
+# piano-clamp is a dataset consumer, not a dataset owner: it validates manifests,
+# extracts features, creates embeddings, analyzes embeddings, and renders
+# review/result artifacts from existing dataset manifests and assets.
+# Dataset creation and source-asset rendering (including audio-from-MIDI or
+# MusicXML-to-audio) belong in the external dataset layer.
+# Point the environment variable at a read-only external dataset root.
+# Prefer PIANO_CLAMP_DATASETS_ROOT (or PIANO_DATASETS_ROOT); PIANO_CLAMP_CORPUS_ROOT
+# is supported as an alias for backwards compatibility.
 corpus_root: ${PIANO_CLAMP_CORPUS_ROOT}
-# Generated locally by scripts/prepare_cpc_adapter.py; never written into CPC.
+# Generated locally by scripts/prepare_cpc_adapter.py; never written into the external dataset.
 adapter_root: data/cpc_adapter/cpc-2026-08-19.2-v1
 corpus_manifest: piano_clamp_manifest.csv
 score_root: data/processed/scores

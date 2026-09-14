@@ -1,9 +1,13 @@
-# Corpus passage preparation
+# Corpus passage preparation (legacy example)
 
-This page documents the small, balanced PDMX symbolic pilot. For the larger
-canonical CPC score/audio workflow, use the independent adapter documented in
-[cpc_adapter.md](cpc_adapter.md). Both preparers live in Piano CLaMP; neither
-requires `mxl-clap`.
+This page documents the small, balanced PDMX symbolic pilot for the legacy
+Chopin/Mozart example. For the larger canonical CPC score/audio workflow, use
+the independent adapter documented in [cpc_adapter.md](cpc_adapter.md). Both
+preparers are kept as explicitly scoped legacy dataset-preparation examples;
+new dataset creation and corpus-scale asset rendering (including audio-from-MIDI)
+belong in the external shared dataset layer, not in piano-clamp. piano-clamp
+itself validates manifests, extracts features, creates embeddings, analyzes
+embeddings, and renders review/result artifacts.
 
 The primary score experiment uses a separate, immutable input bundle rather than
 writing analysis-specific excerpts into `classical-performance-corpus`. The

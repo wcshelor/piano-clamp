@@ -30,7 +30,10 @@ from .study import DEFAULT_AUTHORIZED_RIGHTS, build_study_readiness_report
 
 
 CPC_SCHEMA_VERSION = "1.1.0"
-DEFAULT_COMPOSERS = ("Chopin", "Mozart")
+# Reusable default: all eligible composers. Filtering is an explicit opt-in via
+# the `composers` argument. Legacy example: ("Chopin", "Mozart").
+LEGACY_EXAMPLE_COMPOSERS = ("Chopin", "Mozart")
+DEFAULT_COMPOSERS: tuple[str, ...] | None = None
 SUPPORTED_SCORE_EXTENSIONS = {".mid", ".midi", ".mxl", ".musicxml", ".xml"}
 ADAPTER_EXTRA_FIELDS = (
     "composition_id",

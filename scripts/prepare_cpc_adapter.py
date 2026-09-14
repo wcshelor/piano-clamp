@@ -33,12 +33,19 @@ def build_parser() -> argparse.ArgumentParser:
         "--composer",
         action="append",
         dest="composers",
-        help="Composer to retain; repeat as needed (default: Chopin and Mozart).",
+        help=(
+            "Composer to retain; repeat as needed. When omitted, all eligible "
+            "composers are retained. Filtering is an explicit opt-in."
+        ),
     )
     parser.add_argument(
         "--all-composers",
         action="store_true",
-        help="Retain every eligible composer in the canonical CPC tables.",
+        help=(
+            "Retain every eligible composer in the canonical CPC tables. "
+            "This is now the default when --composer is omitted and is kept for "
+            "backwards compatibility with legacy Chopin/Mozart examples."
+        ),
     )
     parser.add_argument(
         "--skip-hash-verification",
@@ -53,11 +60,17 @@ def main(argv: list[str] | None = None) -> int:
     if args.all_composers and args.composers:
         raise SystemExit("--all-composers cannot be combined with --composer")
     try:
+        # Default is all eligible composers; filtering requires explicit --composer values.
+        composers = None
+        if args.composers:
+            composers = args.composers
+        elif args.all_composers:
+            composers = None
         summary = build_cpc_adapter(
             corpus_root=args.corpus_root,
             output_root=args.output_root,
             export_manifest=args.export_manifest,
-            composers=None if args.all_composers else (args.composers or ("Chopin", "Mozart")),
+            composers=composers,
             verify_hashes=not args.skip_hash_verification,
         )
     except (CpcAdapterError, OSError, ValueError) as exc:

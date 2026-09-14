@@ -1,6 +1,14 @@
 # Copy this file to the ignored configs/paths.yaml, then edit only local paths.
-# The corpus is always treated as read-only.
-corpus_root: /path/to/classical-performance-corpus
+# piano-clamp is a dataset consumer, not a dataset owner.
+# It validates manifests, extracts features, creates embeddings, analyzes embeddings,
+# and renders review/result artifacts from existing dataset manifests and assets.
+# Dataset creation and source-asset rendering (including audio-from-MIDI or
+# corpus-scale MusicXML-to-audio) belong in the external dataset layer, not in piano-clamp.
+# Point corpus_root at a read-only external dataset root. Prefer the convention
+# PIANO_CLAMP_DATASETS_ROOT (or PIANO_DATASETS_ROOT) for shared dataset roots;
+# PIANO_CLAMP_CORPUS_ROOT remains supported as an alias for backwards compatibility.
+# The corpus/dataset is always treated as read-only.
+corpus_root: /path/to/datasets/classical-performance-corpus
 adapter_root: /path/to/scratch/piano-clamp/cpc-adapter/cpc-2026-08-19.2-v1
 corpus_manifest: piano_clamp_manifest.csv
 score_root: data/processed/scores

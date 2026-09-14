@@ -1,15 +1,27 @@
 # External data contract
 
-All source data lives below `MUSIC_DATA_ROOT`; all generated artifacts live
-below `CLAMP3_RUN_ROOT`. The repository neither writes to source data nor
-contains copies of scores, MIDI, audio, embeddings, caches, or results.
+piano-clamp is a consumer of external datasets and a producer of embeddings and
+analysis outputs. It validates manifests, extracts features, creates embeddings,
+analyzes embeddings, and renders review/result artifacts from existing dataset
+manifests and assets. Dataset creation and source-asset rendering — including
+audio-from-MIDI or corpus-scale MusicXML-to-audio — belong in the shared
+dataset layer (for example `classical-performance-corpus`), not in piano-clamp.
+
+All source data lives below an external dataset root (prefer
+`PIANO_CLAMP_DATASETS_ROOT` or `PIANO_DATASETS_ROOT`; `PIANO_CLAMP_CORPUS_ROOT`
+and the legacy `MUSIC_DATA_ROOT` remain supported as aliases); all generated
+artifacts live below a run/output root (e.g. `CLAMP3_RUN_ROOT` or the
+`output_root`/`embedding_store_root`/`analysis_root`/`log_root` configured in
+`configs/embedding_config.yaml`). The repository neither writes to source data
+nor contains copies of scores, MIDI, audio, embeddings, caches, or results
+beyond locally generated adapter bundles.
 
 ## Score manifest
 
-`configs/experiment_chopin_mozart.yaml` resolves its manifest relative to
-`MUSIC_DATA_ROOT`. It is a UTF-8 CSV with exactly these required columns. Extra
-columns may be present; the recognized provenance columns described below are
-copied to the snapshot:
+`configs/experiment_chopin_mozart.yaml` (legacy example; not the default) resolves
+its manifest relative to the dataset root. In general, manifests are UTF-8 CSVs
+with exactly these required columns. Extra columns may be present; the
+recognized provenance columns described below are copied to the snapshot:
 
 | Field | Meaning |
 | --- | --- |
@@ -17,7 +29,7 @@ copied to the snapshot:
 | `composer` | Normalized composer label |
 | `work_title` | Human-readable work title |
 | `movement` | Movement or section label |
-| `relative_path` | Score/MIDI path below `MUSIC_DATA_ROOT` |
+| `relative_path` | Score/MIDI path below the dataset root (`PIANO_CLAMP_DATASETS_ROOT`/`PIANO_DATASETS_ROOT`) |
 | `start_bar` | One-based first bar represented by the file |
 | `end_bar` | One-based final bar represented by the file |
 | `key` | Curated key label |
@@ -32,8 +44,9 @@ mozart_k545_i_b001_016,Wolfgang Amadeus Mozart,Sonata K. 545,I,scores/mozart/k54
 ```
 
 Each file must already represent the intended passage. `start_bar` and
-`end_bar` document provenance; this proof of concept does not cut measures from
-a complete score. Supported symbolic extensions are `.mxl`, `.musicxml`,
+`end_bar` document provenance; piano-clamp does not cut measures from
+a complete score in this contract — passage windowing is handled by the
+separate passage-generation layer when needed. Supported symbolic extensions are `.mxl`, `.musicxml`,
 `.xml`, `.mid`, and `.midi`. Paths must be relative and cannot contain `..`.
 The pipeline checks every file before model inference. Two passage IDs may not
 reference the same file. For MusicXML/MXL, preflight parses the score and warns

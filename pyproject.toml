@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "piano-clamp"
 version = "0.1.0"
-description = "A reproducible CLaMP 3 proof of concept comparing Chopin and Mozart"
+description = "A dataset consumer that validates manifests, extracts features, creates embeddings, analyzes embeddings, and renders review/result artifacts from external piano datasets"
 readme = "README.md"
 requires-python = ">=3.10,<3.13"
 license = {file = "LICENSE"}

@@ -1,10 +1,22 @@
 # Experiment design
 
+piano-clamp is a dataset consumer, not a dataset owner: it validates manifests,
+extracts features, creates embeddings, analyzes embeddings, and renders
+review/result artifacts from existing dataset manifests and assets. Dataset
+creation and source-asset rendering (including audio-from-MIDI or
+corpus-scale MusicXML-to-audio) belong in the external dataset layer (for
+example under `PIANO_CLAMP_DATASETS_ROOT`).
+
 ## Question
 
-This proof of concept asks whether pretrained CLaMP 3 C2 embeddings place
-curated Chopin and Mozart piano passages differently relative to composer-name,
-period, harmony, texture, lyricism, and ornamentation prompts.
+The pipeline is composer-agnostic. As a concrete example, the legacy
+`configs/experiment_chopin_mozart.yaml` (Chopin/Mozart) asks whether pretrained
+CLaMP 3 C2 embeddings place curated Chopin and Mozart piano passages differently
+relative to composer-name, period, harmony, texture, lyricism, and ornamentation
+prompts. The same pipeline supports other composer sets via explicit manifest
+and prompt configuration. Example experiment configs
+(`configs/experiment_chopin_mozart.yaml`, `configs/experiment_bach_chopin_mozart.yaml`)
+are preserved as examples, not defaults.
 
 ## Reproducible unit of analysis
 
