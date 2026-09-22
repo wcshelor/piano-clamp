@@ -345,7 +345,10 @@ def main(argv: list[str] | None = None) -> int:
             min_measures=args.min_measures,
         )
     except (OSError, SymbolicAdapterError) as exc:
-        raise SystemExit(f"error: {exc}") from exc
+        import traceback
+
+        traceback.print_exc()
+        raise SystemExit(f"error: {exc}\n{traceback.format_exc()}") from exc
     print(
         f"Prepared {summary['selected_rows']} symbolic rows from "
         f"{summary['candidate_rows']} usable candidates; excluded {summary['issue_rows']} rows."

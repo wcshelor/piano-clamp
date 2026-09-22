@@ -74,7 +74,10 @@ def main(argv: list[str] | None = None) -> int:
             verify_hashes=not args.skip_hash_verification,
         )
     except (CpcAdapterError, OSError, ValueError) as exc:
-        raise SystemExit(f"error: {exc}") from exc
+        import traceback
+
+        traceback.print_exc()
+        raise SystemExit(f"error: {exc}\n{traceback.format_exc()}") from exc
     print(
         f"Prepared {summary.imported_rows} recordings and {summary.timing_rows} measure timings "
         f"from {summary.corpus_release}; excluded {summary.excluded_rows} rows."
