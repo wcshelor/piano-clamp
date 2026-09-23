@@ -91,16 +91,6 @@ run_verbose() {
   log "OK ($rc): $*"
 }
 
-# --- environment ---
-set +u
-source "$(conda info --base)/etc/profile.d/conda.sh" 2>&1 | cat -v
-conda activate piano-clamp-env 2>&1
-set -u
-export PYTHONUNBUFFERED=1
-export PYTHONFAULTHANDLER=1
-export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
-CLAMP_DEVICE="${CLAMP_DEVICE:-cpu}"
-
 # pin roots (mirrors configs/paths.yaml)
 CORPUS_ROOT="${PIANO_CLAMP_CORPUS_ROOT:-/home/student/w/wshelor/share/datasets/classical-performance-corpus}"
 SHARE_ROOT="/home/student/w/wshelor/share/piano-clamp-runs"
@@ -113,6 +103,35 @@ LOG_COPY="${REPORT_DIR}/full-symbolic-build-${TIMESTAMP}-${SLURM_JOB_ID:-manual}
 
 mkdir -p logs "$REPORT_DIR" "$SHARE_ROOT"
 
+# duplicate stdout to report log as well; keep bash trace separate for failure review
+TRACE_LOG="${REPORT_DIR}/full-symbolic-build-${TIMESTAMP}-${SLURM_JOB_ID:-manual}.trace.log"
+exec > >(tee -a "$LOG_COPY") 2>&1
+exec 19>>"$TRACE_LOG"
+export BASH_XTRACEFD=19
+log "LOGGING ALSO TO $LOG_COPY"
+log "BASH TRACE LOG $TRACE_LOG"
+
+# --- environment ---
+set +u
+if command -v micromamba >/dev/null 2>&1; then
+  eval "$(micromamba shell hook --shell bash)"
+  micromamba activate piano-clamp-env
+elif command -v mamba >/dev/null 2>&1; then
+  eval "$(mamba shell hook --shell bash)"
+  mamba activate piano-clamp-env
+elif command -v conda >/dev/null 2>&1; then
+  eval "$(conda shell.bash hook)"
+  conda activate piano-clamp-env
+else
+  echo "Could not find micromamba, mamba, or conda on PATH."
+  exit 1
+fi
+set -u
+export PYTHONUNBUFFERED=1
+export PYTHONFAULTHANDLER=1
+export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
+CLAMP_DEVICE="${CLAMP_DEVICE:-cpu}"
+
 log "REPO_ROOT=$REPO_ROOT SHARE_ROOT=$SHARE_ROOT CORPUS_ROOT=$CORPUS_ROOT REPORT_FILE=$REPORT_FILE CLAMP_DEVICE=$CLAMP_DEVICE"
 log "HOST=$(hostname) USER=$(whoami) SLURM_JOB_ID=${SLURM_JOB_ID:-none} SLURM_NODELIST=${SLURM_NODELIST:-none}"
 nvidia-smi 2>&1 | head -n 50 || echo "nvidia-smi not available"
@@ -123,14 +142,6 @@ cat configs/embedding_config.yaml 2>&1 | head -n 80
 ls -lh "$CORPUS_ROOT" 2>&1 | head -n 30
 ls -lh "$CORPUS_ROOT"/data/canonical/*.csv 2>&1 | head -n 30
 ls -lh "$CORPUS_ROOT"/manifests/releases/*.json 2>&1 | head -n 20
-
-# duplicate stdout to report log as well; keep bash trace separate for failure review
-TRACE_LOG="${REPORT_DIR}/full-symbolic-build-${TIMESTAMP}-${SLURM_JOB_ID:-manual}.trace.log"
-exec > >(tee -a "$LOG_COPY") 2>&1
-exec 19>>"$TRACE_LOG"
-export BASH_XTRACEFD=19
-log "LOGGING ALSO TO $LOG_COPY"
-log "BASH TRACE LOG $TRACE_LOG"
 
 # --- adapter phase: verbose rebuild for Mozart+Chopin+Bach mix ---
 # Note: cpc-2026-08-19.2 has 110 DCML MSCX pending until MuseScore converts them.
