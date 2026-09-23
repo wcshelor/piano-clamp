@@ -3,12 +3,11 @@
 # Queue with: sbatch jobs/build_full_symbolic_library_verbose.slurm
 # Report will be written to share/piano-clamp-runs + logs/slurm-*.out (see REPORT_FILE below)
 
-#SBATCH --partition=gpu
+#SBATCH --partition=workq
 #SBATCH --job-name=full-symbolic-verbose
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=64G
-#SBATCH --gres=gpu:1
-#SBATCH --time=12:00:00
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=32G
+#SBATCH --time=04:00:00
 #SBATCH --output=logs/slurm-%x-%j.out
 #SBATCH --open-mode=append
 
@@ -40,6 +39,7 @@ set -u
 export PYTHONUNBUFFERED=1
 export PYTHONFAULTHANDLER=1
 export PYTHONPATH="${PWD}/src:${PYTHONPATH:-}"
+CLAMP_DEVICE="${CLAMP_DEVICE:-cpu}"
 
 # pin roots (mirrors configs/paths.yaml)
 CORPUS_ROOT="${PIANO_CLAMP_CORPUS_ROOT:-/home/student/w/wshelor/share/datasets/classical-performance-corpus}"
@@ -52,7 +52,7 @@ LOG_COPY="${REPORT_DIR}/full-symbolic-build-${TIMESTAMP}-${SLURM_JOB_ID:-manual}
 
 mkdir -p logs "$REPORT_DIR" "$SHARE_ROOT"
 
-log "REPO_ROOT=$REPO_ROOT SHARE_ROOT=$SHARE_ROOT CORPUS_ROOT=$CORPUS_ROOT REPORT_FILE=$REPORT_FILE"
+log "REPO_ROOT=$REPO_ROOT SHARE_ROOT=$SHARE_ROOT CORPUS_ROOT=$CORPUS_ROOT REPORT_FILE=$REPORT_FILE CLAMP_DEVICE=$CLAMP_DEVICE"
 log "HOST=$(hostname) USER=$(whoami) SLURM_JOB_ID=${SLURM_JOB_ID:-none} SLURM_NODELIST=${SLURM_NODELIST:-none}"
 nvidia-smi 2>&1 | head -n 50 || echo "nvidia-smi not available"
 python3 -V 2>&1; python3 -c "import sys,torch; print(sys.version); print('torch',torch.__version__, 'cuda',torch.version.cuda, 'cuda_available',torch.cuda.is_available())" 2>&1 | head -n 20
@@ -132,20 +132,20 @@ cat configs/paths.yaml 2>&1 | head -n 60
 
 # --- embedding phase: symbolic library (MXL/MIDI mix, C2) ---
 log "STEP 4: embed text prompts (C2, all 137 enabled)"
-run_verbose python -u -X faulthandler scripts/embed_text_prompts.py --config configs/embedding_config.yaml --device cuda --force
+run_verbose python -u -X faulthandler scripts/embed_text_prompts.py --config configs/embedding_config.yaml --device "$CLAMP_DEVICE" --force
 
 log "STEP 5: embed symbolic scores (complete movements, 1 per work, MXL/MIDI mix per select_symbolic_records)"
-run_verbose python -u -X faulthandler scripts/embed_symbolic_scores.py --config configs/embedding_config.yaml --device cuda --force
+run_verbose python -u -X faulthandler scripts/embed_symbolic_scores.py --config configs/embedding_config.yaml --device "$CLAMP_DEVICE" --force
 
 log "STEP 6: embed passages symbolic score windows (MXL, 4/8/16 overlap-half)"
 run_verbose python -u -X faulthandler scripts/embed_passages.py \
-  --config configs/embedding_config.yaml --device cuda \
+  --config configs/embedding_config.yaml --device "$CLAMP_DEVICE" \
   --modality symbolic --source-material score \
   --mode 4 --mode 8 --mode 16 --overlap-half --force --status-every 5 --chunk-size 25
 
 log "STEP 7: embed passages performance_midi windows (MIDI, 4/8/16 overlap-half, mido time-crop)"
 run_verbose python -u -X faulthandler scripts/embed_passages.py \
-  --config configs/embedding_config.yaml --device cuda \
+  --config configs/embedding_config.yaml --device "$CLAMP_DEVICE" \
   --modality symbolic --source-material performance_midi \
   --mode 4 --mode 8 --mode 16 --overlap-half --force --status-every 5 --chunk-size 25
 
