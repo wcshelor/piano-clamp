@@ -135,13 +135,16 @@ CLAMP_DEVICE="${CLAMP_DEVICE:-cpu}"
 log "REPO_ROOT=$REPO_ROOT SHARE_ROOT=$SHARE_ROOT CORPUS_ROOT=$CORPUS_ROOT REPORT_FILE=$REPORT_FILE CLAMP_DEVICE=$CLAMP_DEVICE"
 log "HOST=$(hostname) USER=$(whoami) SLURM_JOB_ID=${SLURM_JOB_ID:-none} SLURM_NODELIST=${SLURM_NODELIST:-none}"
 nvidia-smi 2>&1 | head -n 50 || echo "nvidia-smi not available"
-python3 -V 2>&1; python3 -c "import sys,torch; print(sys.version); print('torch',torch.__version__, 'cuda',torch.version.cuda, 'cuda_available',torch.cuda.is_available())" 2>&1 | head -n 20
-git rev-parse HEAD 2>&1; git status --short 2>&1 | head -n 50; git submodule status 2>&1 | head -n 20
-cat configs/paths.yaml 2>&1 | head -n 80
-cat configs/embedding_config.yaml 2>&1 | head -n 80
-ls -lh "$CORPUS_ROOT" 2>&1 | head -n 30
-ls -lh "$CORPUS_ROOT"/data/canonical/*.csv 2>&1 | head -n 30
-ls -lh "$CORPUS_ROOT"/manifests/releases/*.json 2>&1 | head -n 20
+python3 -V 2>&1 || true
+python3 -c "import sys,torch; print(sys.version); print('torch',torch.__version__, 'cuda',torch.version.cuda, 'cuda_available',torch.cuda.is_available())" 2>&1 | head -n 20 || true
+git rev-parse HEAD 2>&1 || true
+git status --short 2>&1 | head -n 50 || true
+git submodule status 2>&1 | head -n 20 || true
+cat configs/paths.yaml 2>&1 | head -n 80 || true
+cat configs/embedding_config.yaml 2>&1 | head -n 80 || true
+ls -lh "$CORPUS_ROOT" 2>&1 | head -n 30 || true
+ls -lh "$CORPUS_ROOT"/data/canonical/*.csv 2>&1 | head -n 30 || true
+ls -lh "$CORPUS_ROOT"/manifests/releases/*.json 2>&1 | head -n 20 || true
 
 # --- adapter phase: verbose rebuild for Mozart+Chopin+Bach mix ---
 # Note: cpc-2026-08-19.2 has 110 DCML MSCX pending until MuseScore converts them.
@@ -165,7 +168,7 @@ else
 fi
 
 log "STEP 2a: adapter manifest verbose dump"
-ls -lh "$ADAPTER_ALL" 2>&1 | head -n 50
+ls -lh "$ADAPTER_ALL" 2>&1 | head -n 50 || true
 cat "$ADAPTER_ALL"/adapter_metadata.json 2>&1 | head -n 200 || true
 cat "$ADAPTER_ALL"/cohort_summary.csv 2>&1 | head -n 50 || true
 cut -d, -f2 "$ADAPTER_ALL"/piano_clamp_manifest.csv 2>&1 | sort | uniq -c | sort -rn | head -n 20 || true
@@ -182,7 +185,7 @@ else
     --composer Bach --composer Chopin --composer Mozart
   # also build strict Bach-only as reference (if requested)
 fi
-ls -lh "$BACH_ADAPTER" 2>&1 | head -n 50
+ls -lh "$BACH_ADAPTER" 2>&1 | head -n 50 || true
 cat "$BACH_ADAPTER"/adapter_metadata.json 2>&1 | head -n 200 || true
 cut -d, -f2 "$BACH_ADAPTER"/piano_clamp_manifest.csv 2>&1 | sort | uniq -c | head -n 20 || true
 
@@ -204,7 +207,7 @@ cfg["adapter_root"] = os.path.abspath("$ADAPTER_ALL")
 p.write_text(yaml.safe_dump(cfg, sort_keys=False))
 print("AFTER adapter_root", cfg["adapter_root"])
 PY
-cat configs/paths.yaml 2>&1 | head -n 60
+cat configs/paths.yaml 2>&1 | head -n 60 || true
 
 # --- embedding phase: symbolic library (MXL/MIDI mix, C2) ---
 log "STEP 4: embed text prompts (C2, all 137 enabled)"
@@ -350,13 +353,13 @@ print(f"WROTE {report}")
 PY
 
 log "REPORT_FILE=$REPORT_FILE LOG_COPY=$LOG_COPY"
-ls -lh "$REPORT_FILE" "$LOG_COPY" 2>&1 | head -n 20
-cat "$REPORT_FILE" 2>&1 | head -n 300
+ls -lh "$REPORT_FILE" "$LOG_COPY" 2>&1 | head -n 20 || true
+cat "$REPORT_FILE" 2>&1 | head -n 300 || true
 
 # restore paths.yaml
 log "RESTORE paths.yaml from $BACKUP_PATHS"
 cp -v "$BACKUP_PATHS" configs/paths.yaml 2>&1
-cat configs/paths.yaml 2>&1 | head -n 30
+cat configs/paths.yaml 2>&1 | head -n 30 || true
 
 log "DONE - attach $REPORT_FILE and logs/slurm-${SLURM_JOB_NAME:-full-symbolic-verbose}-${SLURM_JOB_ID:-manual}.out for debugging"
 finish_status ok 0 done done
