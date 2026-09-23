@@ -139,16 +139,100 @@ class CorpusLoadingTests(unittest.TestCase):
             with self.assertRaisesRegex(CorpusManifestError, "recording_id 'rec_demo' has conflicting registrations"):
                 read_corpus_manifest(manifest)
 
-    def test_select_symbolic_records_rejects_conflicting_score_versions_for_one_movement(self):
+    def test_select_symbolic_records_deterministically_picks_one_source_for_multiple_score_versions(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             (root / "manifests").mkdir()
             rows = [
-                corpus_row(score_path="scores/a.musicxml"),
+                corpus_row(score_path="scores/a.musicxml", score_version_id="scv_a"),
                 corpus_row(
                     passage_id="cmp_demo_v2",
                     recording_id="rec_demo_v2",
                     score_path="scores/b.musicxml",
+                    audio_path="audio/demo_v2.wav",
+                    score_version_id="scv_b",
+                ),
+            ]
+            records = select_symbolic_records(rows, root)
+            self.assertEqual(len(records), 1)
+            self.assertEqual(records[0]["movement_id"], "mov_demo")
+            # deterministic: same result regardless of input order
+            records_reversed = select_symbolic_records(list(reversed(rows)), root)
+            self.assertEqual(records[0]["source_path"], records_reversed[0]["source_path"])
+            self.assertEqual(records[0]["score_id"], records_reversed[0]["score_id"])
+
+    def test_select_symbolic_records_prefers_mxl_over_midi_for_one_movement(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "manifests").mkdir()
+            rows = [
+                corpus_row(
+                    passage_id="cmp_demo_midi",
+                    score_path="",
+                    mxl_path="",
+                    midi_path="scores/a.mid",
+                    score_format="midi",
+                    score_version_id="scv_midi",
+                ),
+                corpus_row(
+                    passage_id="cmp_demo_mxl",
+                    recording_id="rec_demo_v2",
+                    score_path="",
+                    mxl_path="scores/b.mxl",
+                    midi_path="",
+                    score_format="mxl",
+                    audio_path="audio/demo_v2.wav",
+                    score_version_id="scv_mxl",
+                ),
+            ]
+            records = select_symbolic_records(rows, root)
+            self.assertEqual(len(records), 1)
+            self.assertTrue(records[0]["source_path"].endswith(".mxl"))
+            # reversed input still prefers mxl
+            records_reversed = select_symbolic_records(list(reversed(rows)), root)
+            self.assertTrue(records_reversed[0]["source_path"].endswith(".mxl"))
+            self.assertEqual(records[0]["source_path"], records_reversed[0]["source_path"])
+
+    def test_select_symbolic_records_is_deterministic_with_multiple_midi_only_candidates(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "manifests").mkdir()
+            rows = [
+                corpus_row(
+                    score_path="",
+                    mxl_path="",
+                    midi_path="scores/b.mid",
+                    score_format="midi",
+                    score_version_id="scv_b",
+                ),
+                corpus_row(
+                    passage_id="cmp_demo_v2",
+                    recording_id="rec_demo_v2",
+                    score_path="",
+                    mxl_path="",
+                    midi_path="scores/a.mid",
+                    score_format="midi",
+                    audio_path="audio/demo_v2.wav",
+                    score_version_id="scv_a",
+                ),
+            ]
+            first = select_symbolic_records(rows, root)
+            second = select_symbolic_records(list(reversed(rows)), root)
+            self.assertEqual(len(first), 1)
+            self.assertEqual(len(second), 1)
+            self.assertEqual(first[0]["source_path"], second[0]["source_path"])
+            self.assertEqual(first[0]["movement_id"], "mov_demo")
+
+    def test_select_symbolic_records_still_rejects_conflicting_movement_identity(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            (root / "manifests").mkdir()
+            rows = [
+                corpus_row(),
+                corpus_row(
+                    passage_id="cmp_demo_v2",
+                    recording_id="rec_demo_v2",
+                    composer="Frédéric Chopin",
                     audio_path="audio/demo_v2.wav",
                 ),
             ]

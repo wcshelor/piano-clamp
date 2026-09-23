@@ -77,6 +77,13 @@ SYMBOLIC_REGISTRATION_FIELDS = (
     "score_format",
     "score_version_id",
 )
+SYMBOLIC_IDENTITY_FIELDS = (
+    "composer",
+    "period",
+    "composition_id",
+    "work_id",
+    "movement_id",
+)
 
 
 class PipelineConfigurationError(ValueError):
@@ -405,31 +412,85 @@ def select_symbolic_records(
     require_consistent_registrations(
         row_list,
         key_field="movement_id",
-        stable_fields=SYMBOLIC_REGISTRATION_FIELDS,
+        stable_fields=SYMBOLIC_IDENTITY_FIELDS,
         noun="movement_id",
     )
     root = Path(corpus_root)
     works = read_lookup(root / "manifests" / "works.csv", "work_id")
     movements = read_lookup(root / "manifests" / "movements.csv", "movement_id")
+
+    def _row_sort_key(item: Mapping[str, str]) -> tuple[str, ...]:
+        return (
+            _text(item.get("composer", "")),
+            _text(item.get("work_id", "")),
+            _text(item.get("movement_id", "")),
+            _text(item.get("passage_id", "")),
+            _text(item.get("score_version_id", "")),
+            _text(item.get("score_path", "")),
+            _text(item.get("mxl_path", "")),
+            _text(item.get("midi_path", "")),
+            _text(item.get("score_format", "")),
+        )
+
+    grouped: dict[str, list[dict[str, str]]] = {}
+    for row in row_list:
+        movement_id = _text(row.get("movement_id", ""))
+        if movement_id:
+            grouped.setdefault(movement_id, []).append(row)
+
+    def _movement_sort_key(movement_id: str) -> tuple[str, ...]:
+        group = grouped[movement_id]
+        rep = sorted(group, key=_row_sort_key)[0]
+        return (
+            _text(rep.get("composer", "")),
+            _text(rep.get("work_id", "")),
+            _text(rep.get("movement_id", "")),
+        )
+
     chosen: dict[str, dict[str, Any]] = {}
-    for row in sorted(
-        row_list,
-        key=lambda item: (item["composer"], item["work_id"], item["movement_id"], item["passage_id"]),
-    ):
-        movement_id = row["movement_id"]
-        if movement_id in chosen:
-            continue
+    for movement_id in sorted(grouped.keys(), key=_movement_sort_key):
+        group = sorted(grouped[movement_id], key=_row_sort_key)
+        rep_row = group[0]
         movement = movements.get(movement_id, {})
-        work = works.get(row["work_id"], {})
-        candidates = [
-            row.get("mxl_path", ""),
-            movement.get("mxl_path", ""),
-            row.get("score_path", ""),
-            movement.get("score_path", ""),
-            row.get("midi_path", ""),
-            movement.get("midi_path", ""),
-        ]
-        unique_candidates = list(dict.fromkeys(value for value in candidates if value))
+        work = works.get(rep_row["work_id"], {})
+        # Deterministically pick one symbolic source per movement.
+        # Preference order respects existing candidate order: mxl over score over midi,
+        # with row values considered before movement-level defaults at each rank.
+        # Scanning ranks outermost ensures MusicXML/MXL from any row wins over MIDI
+        # from any other row, while sorted group order makes ties stable.
+        unique_candidates: list[str] = []
+        seen: set[str] = set()
+
+        for item in group:
+            value = _text(item.get("mxl_path", ""))
+            if value and value not in seen:
+                seen.add(value)
+                unique_candidates.append(value)
+        value = _text(movement.get("mxl_path", ""))
+        if value and value not in seen:
+            seen.add(value)
+            unique_candidates.append(value)
+
+        for item in group:
+            value = _text(item.get("score_path", ""))
+            if value and value not in seen:
+                seen.add(value)
+                unique_candidates.append(value)
+        value = _text(movement.get("score_path", ""))
+        if value and value not in seen:
+            seen.add(value)
+            unique_candidates.append(value)
+
+        for item in group:
+            value = _text(item.get("midi_path", ""))
+            if value and value not in seen:
+                seen.add(value)
+                unique_candidates.append(value)
+        value = _text(movement.get("midi_path", ""))
+        if value and value not in seen:
+            seen.add(value)
+            unique_candidates.append(value)
+
         supported = next(
             (value for value in unique_candidates if Path(value).suffix.lower() in SYMBOLIC_EXTENSIONS),
             "",
@@ -441,7 +502,7 @@ def select_symbolic_records(
         elif Path(original).suffix.lower() not in SYMBOLIC_EXTENSIONS:
             status, error = (
                 "unsupported",
-                f"CLaMP supports MusicXML/MXL/MIDI, not {Path(original).suffix or row.get('score_format')}",
+                f"CLaMP supports MusicXML/MXL/MIDI, not {Path(original).suffix or rep_row.get('score_format')}",
             )
         elif not source or not source.is_file():
             status, error = "unavailable", "symbolic source is not present locally"
@@ -449,15 +510,15 @@ def select_symbolic_records(
             status, error = "pending", ""
         chosen[movement_id] = {
             "score_id": movement_id,
-            "composer": row["composer"],
-            "period": row["period"],
-            "composition_id": row.get("composition_id", ""),
-            "work_id": row["work_id"],
+            "composer": rep_row["composer"],
+            "period": rep_row["period"],
+            "composition_id": rep_row.get("composition_id", ""),
+            "work_id": rep_row["work_id"],
             "movement_id": movement_id,
-            "title": work.get("title") or movement.get("movement_title") or row.get("work_title") or row["work_id"],
+            "title": work.get("title") or movement.get("movement_title") or rep_row.get("work_title") or rep_row["work_id"],
             "source_path": original,
             "resolved_source_path": source,
-            "source_format": Path(original).suffix.lower().lstrip(".") if original else row.get("score_format", ""),
+            "source_format": Path(original).suffix.lower().lstrip(".") if original else rep_row.get("score_format", ""),
             "status": status,
             "error_message": error,
         }
