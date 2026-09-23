@@ -220,13 +220,13 @@ log "STEP 6: embed passages symbolic score windows (MXL, 4/8/16 overlap-half)"
 run_verbose python -u -X faulthandler scripts/embed_passages.py \
   --config configs/embedding_config.yaml --device "$CLAMP_DEVICE" \
   --modality symbolic --source-material score \
-  --mode 4 --mode 8 --mode 16 --overlap-half --force --status-every 5 --chunk-size 25
+  --mode 4 --mode 8 --mode 16 --overlap-half --force --reset-resume --status-every 5 --chunk-size 25
 
 log "STEP 7: embed passages performance_midi windows (MIDI, 4/8/16 overlap-half, mido time-crop)"
 run_verbose python -u -X faulthandler scripts/embed_passages.py \
   --config configs/embedding_config.yaml --device "$CLAMP_DEVICE" \
   --modality symbolic --source-material performance_midi \
-  --mode 4 --mode 8 --mode 16 --overlap-half --force --status-every 5 --chunk-size 25
+  --mode 4 --mode 8 --mode 16 --overlap-half --force --reset-resume --status-every 5 --chunk-size 25
 
 # also run dedicated Bach symbolic v0 as reference (uses its own config)
 log "STEP 8: embed Bach symbolic reference (separate output_root share/.../bach_symbolic_v0)"
