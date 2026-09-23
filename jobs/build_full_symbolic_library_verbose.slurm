@@ -11,13 +11,73 @@
 #SBATCH --output=logs/slurm-%x-%j.out
 #SBATCH --open-mode=append
 
-set -euo pipefail
+set -Eeuo pipefail
 set -x
+export PS4='+ [${BASH_SOURCE##*/}:${LINENO}] '
 
-# --- helpers: verbose trap + logging ---
-trap 'echo "!!! ERROR at line $LINENO: $BASH_COMMAND (exit $?)"; echo "!!! STACK:"; caller; echo "!!! env:"; env | sort; echo "!!! pwd:"; pwd; ls -R 2>&1 | head -n 200' ERR
-
+# --- helpers: compact failure footer + logging ---
 log() { echo "[$(date -Iseconds)] $*"; }
+
+finish_status() {
+  local status=${1:-failed}
+  local exit_code=${2:-0}
+  local line_no=${3:-unknown}
+  local command=${4:-unknown}
+
+  set +e
+  [[ -n "${BACKUP_PATHS:-}" && -f "${BACKUP_PATHS:-}" ]] && cp -v "$BACKUP_PATHS" configs/paths.yaml 2>&1
+  cat > "${STATUS_FILE:-logs/full-symbolic-build-${SLURM_JOB_ID:-manual}.status.txt}" <<EOF
+PIANO_CLAMP_RUN_COMPLETE
+status=${status}
+exit_code=${exit_code}
+job_id=${SLURM_JOB_ID:-manual}
+job_name=${SLURM_JOB_NAME:-full-symbolic-verbose}
+host=$(hostname 2>/dev/null || echo unknown)
+work_dir=$(pwd)
+line=${line_no}
+command=${command}
+device=${CLAMP_DEVICE:-unset}
+report_file=${REPORT_FILE:-unset}
+status_file=${STATUS_FILE:-unset}
+log_copy=${LOG_COPY:-unset}
+trace_log=${TRACE_LOG:-unset}
+slurm_log=logs/slurm-${SLURM_JOB_NAME:-full-symbolic-verbose}-${SLURM_JOB_ID:-manual}.out
+git_head=$(git rev-parse HEAD 2>/dev/null || echo unknown)
+git_status=$(git status --short 2>/dev/null | head -n 20)
+EOF
+
+  echo
+  echo "============================================================"
+  echo "PIANO_CLAMP_RUN_COMPLETE"
+  echo "status=${status}"
+  echo "exit_code=${exit_code}"
+  echo "job_id=${SLURM_JOB_ID:-manual}"
+  echo "line=${line_no}"
+  echo "command=${command}"
+  echo "report_file=${REPORT_FILE:-unset}"
+  echo "status_file=${STATUS_FILE:-unset}"
+  echo "log_copy=${LOG_COPY:-unset}"
+  echo "trace_log=${TRACE_LOG:-unset}"
+  echo "slurm_log=logs/slurm-${SLURM_JOB_NAME:-full-symbolic-verbose}-${SLURM_JOB_ID:-manual}.out"
+  echo "============================================================"
+  echo
+
+  if [[ "${status}" != "ok" ]]; then
+    echo "Last 120 shell trace lines:"
+    tail -n 120 "${TRACE_LOG:-/dev/null}" 2>/dev/null || true
+  fi
+}
+
+on_error() {
+  local exit_code=$?
+  local line_no=${1:-unknown}
+  local command=${2:-unknown}
+  finish_status failed "$exit_code" "$line_no" "$command"
+  exit "$exit_code"
+}
+
+trap 'on_error $LINENO "$BASH_COMMAND"' ERR
+
 run_verbose() {
   log "RUN: $*"
   set +e
@@ -48,6 +108,7 @@ REPO_ROOT="$(pwd)"
 TIMESTAMP="$(date +%Y%m%dT%H%M%SZ)"
 REPORT_DIR="${SHARE_ROOT}/reports"
 REPORT_FILE="${REPORT_DIR}/full-symbolic-build-${TIMESTAMP}-${SLURM_JOB_ID:-manual}.json"
+STATUS_FILE="${REPORT_DIR}/full-symbolic-build-${TIMESTAMP}-${SLURM_JOB_ID:-manual}.status.txt"
 LOG_COPY="${REPORT_DIR}/full-symbolic-build-${TIMESTAMP}-${SLURM_JOB_ID:-manual}.log"
 
 mkdir -p logs "$REPORT_DIR" "$SHARE_ROOT"
@@ -63,9 +124,13 @@ ls -lh "$CORPUS_ROOT" 2>&1 | head -n 30
 ls -lh "$CORPUS_ROOT"/data/canonical/*.csv 2>&1 | head -n 30
 ls -lh "$CORPUS_ROOT"/manifests/releases/*.json 2>&1 | head -n 20
 
-# duplicate stdout to report log as well
+# duplicate stdout to report log as well; keep bash trace separate for failure review
+TRACE_LOG="${REPORT_DIR}/full-symbolic-build-${TIMESTAMP}-${SLURM_JOB_ID:-manual}.trace.log"
 exec > >(tee -a "$LOG_COPY") 2>&1
+exec 19>>"$TRACE_LOG"
+export BASH_XTRACEFD=19
 log "LOGGING ALSO TO $LOG_COPY"
+log "BASH TRACE LOG $TRACE_LOG"
 
 # --- adapter phase: verbose rebuild for Mozart+Chopin+Bach mix ---
 # Note: cpc-2026-08-19.2 has 110 DCML MSCX pending until MuseScore converts them.
@@ -282,5 +347,6 @@ log "RESTORE paths.yaml from $BACKUP_PATHS"
 cp -v "$BACKUP_PATHS" configs/paths.yaml 2>&1
 cat configs/paths.yaml 2>&1 | head -n 30
 
-log "DONE - attach $REPORT_FILE and logs/slurm-${SLURM_JOB_ID}.out for debugging"
+log "DONE - attach $REPORT_FILE and logs/slurm-${SLURM_JOB_NAME:-full-symbolic-verbose}-${SLURM_JOB_ID:-manual}.out for debugging"
+finish_status ok 0 done done
 set +x
