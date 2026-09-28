@@ -136,6 +136,39 @@ work that would be painful or impossible locally, such as:
 - compact figures suitable for review;
 - caveats and suspicious patterns.
 
+## Heavy Artifact Inventory
+
+Embeddings and other large HPC artifacts are intentionally not committed, so
+the repository needs a committed ledger of what exists on the cluster. After
+every successful embedding job, regenerate the inventory:
+
+```bash
+python scripts/inventory_hpc_embeddings.py \
+  --embedding-root /home/student/w/wshelor/share/piano-clamp-runs/embeddings \
+  --store-root /share/users/student/w/wshelor/piano-clamp/embedding_store \
+  --output-dir reports/hpc/artifact_inventory
+```
+
+Then commit the generated lightweight files:
+
+```text
+reports/hpc/artifact_inventory/embeddings_inventory.csv
+reports/hpc/artifact_inventory/embeddings_inventory.md
+reports/hpc/artifact_inventory/latest.json
+```
+
+The inventory records bundle paths, row counts, model/checkpoint/config hashes,
+matrix/table hashes, composer scope, source material, window modes, and whether
+the artifact is a live bundle or an immutable store snapshot. It is the source
+of truth for local planning when the raw embeddings are visible only on the
+HPC.
+
+When an agent gives terminal commands for any HPC action that may affect
+embeddings, the command sequence should include the inventory refresh as the
+final step. Read-only inspection commands do not need it, but embedding runs,
+backfills, cleanup, bundle merges, and reruns do. Agents should inspect the
+inventory before recommending expensive reruns.
+
 ## Standard Cycle
 
 ### 1. Design Locally
@@ -230,6 +263,8 @@ git push
 
 If a report is too large, reduce it before committing. The report should contain
 derived summaries and compact tables, not raw embeddings or large source data.
+For embedding jobs, include the updated `reports/hpc/artifact_inventory/`
+files in the same commit or in an immediate follow-up commit.
 
 ### 6. Pull Reports Locally
 

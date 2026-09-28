@@ -38,6 +38,7 @@ There are also three important operational products:
 - `embedding_store`: immutable run snapshots plus a registry of all embedded items
 - `analysis`: validation reports, similarity tables, nearest-neighbor outputs, frozen manifests
 - `logs`: stage logs, Slurm logs, and other runtime diagnostics
+- `reports/hpc/artifact_inventory`: committed metadata about heavy HPC artifacts that git does not store
 
 The workflow is built around the upstream CLaMP 3 code in `vendor/clamp3`, but
 this repo wraps it with deterministic staging, metadata capture, deduplication,
@@ -361,12 +362,32 @@ Typical workflow:
 2. check active jobs with `squeue -u <user>`
 3. check finished history with `sacct`
 4. inspect the actual log file in `logs/slurm-<jobname>-<jobid>.out`
+5. if embeddings may have changed, regenerate and commit the HPC artifact inventory
 
 Remember:
 
 - `squeue` only shows pending/running jobs
 - finished jobs disappear from `squeue`
 - use the real numeric job ID, not a literal `<jobid>` placeholder
+
+### HPC Artifact Inventory
+
+Raw embedding bundles and immutable embedding-store snapshots are intentionally
+not committed, so git cannot tell local agents what already exists on the HPC.
+After any embedding job, embedding backfill, cleanup, or command that may create
+or change embedding bundles, run:
+
+```bash
+python scripts/inventory_hpc_embeddings.py \
+  --embedding-root /home/student/w/wshelor/share/piano-clamp-runs/embeddings \
+  --store-root /share/users/student/w/wshelor/piano-clamp/embedding_store \
+  --output-dir reports/hpc/artifact_inventory
+```
+
+Then commit the updated files under
+`reports/hpc/artifact_inventory/`. When giving terminal commands for embedding
+work, include this inventory command as the final step unless the command is
+purely read-only.
 
 ## MuseScore On HPC
 

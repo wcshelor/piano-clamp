@@ -292,6 +292,80 @@ class EmbeddingBundleTests(unittest.TestCase):
             self.assertEqual({row["item_type"] for row in registry_rows}, {"passage_symbolic"})
             self.assertTrue((store / "runs" / metadata["run_id"] / "passages" / "metadata.json").is_file())
 
+    def test_hpc_embedding_inventory_writes_commit_friendly_reports(self):
+        rows = [
+            {
+                "prompt_id": "prompt-bright",
+                "family": "texture",
+                "text": "bright articulation",
+                "embedding_row": 0,
+                "embedding_dimension": 4,
+                "status": "success",
+                "error_message": "",
+            }
+        ]
+        metadata = {
+            "run_id": "20260923T000000Z-inventory",
+            "timestamp": "2026-09-23T00:00:00+00:00",
+            "stage": "text",
+            "model": "CLaMP 3",
+            "model_space": "c2",
+            "checkpoint_path": "checkpoint.pth",
+            "checkpoint_hash": "chk",
+            "configuration_hash": "cfg",
+            "device": "cuda",
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            embeddings = root / "embeddings"
+            store = root / "embedding_store"
+            reports = root / "reports"
+            write_embedding_bundle(
+                embeddings / "text",
+                np.array([[1, 0, 0, 0]], dtype=float),
+                rows,
+                matrix_filename="prompt_embeddings.npy",
+                table_filename="prompt_embeddings.csv",
+                fields=tuple(rows[0]),
+                id_field="prompt_id",
+                metadata=metadata,
+            )
+            snapshot_bundle(embeddings / "text", store_root=store, output_root=embeddings)
+
+            script = Path(__file__).resolve().parents[1] / "scripts" / "inventory_hpc_embeddings.py"
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(script),
+                    "--embedding-root",
+                    str(embeddings),
+                    "--store-root",
+                    str(store),
+                    "--output-dir",
+                    str(reports),
+                ],
+                text=True,
+                capture_output=True,
+                check=True,
+            )
+
+            self.assertIn(str(reports), result.stdout)
+            inventory_csv = reports / "embeddings_inventory.csv"
+            latest_json = reports / "latest.json"
+            inventory_md = reports / "embeddings_inventory.md"
+            self.assertTrue(inventory_csv.is_file())
+            self.assertTrue(latest_json.is_file())
+            self.assertTrue(inventory_md.is_file())
+            with inventory_csv.open(newline="", encoding="utf-8") as handle:
+                inventory_rows = list(csv.DictReader(handle))
+            self.assertEqual({row["location"] for row in inventory_rows}, {"live", "store"})
+            self.assertEqual({row["kind"] for row in inventory_rows}, {"text"})
+            self.assertTrue(all(row["matrix_sha256"] for row in inventory_rows))
+            summary = json.loads(latest_json.read_text(encoding="utf-8"))
+            self.assertEqual(summary["artifact_count"], 2)
+            self.assertEqual(summary["live_count"], 1)
+            self.assertIn("Current Live Bundles", inventory_md.read_text(encoding="utf-8"))
+
     def test_failed_passage_report_and_review_export(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
