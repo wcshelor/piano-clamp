@@ -4,10 +4,15 @@
     "runs/20260822T145043Z-2e51e949df71/passages",
     "runs/20260822T153905Z-2e51e949df71/passages",
     "runs/20260824T205205Z-dc6dd67ba976/passages",
-    "runs/20260824T224507Z-a1c8de22a9f7/text"
+    "runs/20260824T224507Z-a1c8de22a9f7/text",
+    "runs/20260923T205318Z-484981623dfe/text",
+    "runs/20260923T210740Z-07cd0b1111e4/text",
+    "runs/20260923T210853Z-b5075c48c8de/symbolic",
+    "runs/20260923T212328Z-bc987c466054/text",
+    "runs/20260923T212525Z-a23009a71a6d/symbolic"
   ],
   "duplicate_skips": 0,
   "failed_count": 2995,
-  "row_count": 24652,
-  "successful_count": 21657
+  "row_count": 25214,
+  "successful_count": 22219
 }
