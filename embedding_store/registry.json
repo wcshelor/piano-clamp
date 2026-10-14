@@ -9,10 +9,11 @@
     "runs/20260923T210740Z-07cd0b1111e4/text",
     "runs/20260923T210853Z-b5075c48c8de/symbolic",
     "runs/20260923T212328Z-bc987c466054/text",
-    "runs/20260923T212525Z-a23009a71a6d/symbolic"
+    "runs/20260923T212525Z-a23009a71a6d/symbolic",
+    "runs/20261004T091656Z-f356084eeade/symbolic"
   ],
   "duplicate_skips": 0,
-  "failed_count": 2995,
-  "row_count": 25214,
+  "failed_count": 3057,
+  "row_count": 25276,
   "successful_count": 22219
 }
