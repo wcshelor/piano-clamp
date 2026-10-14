@@ -2,17 +2,30 @@
 """Quick overview of recent Slurm jobs for the current user.
 
 Combines ``squeue`` (active jobs) and ``sacct`` (recent completed jobs) into
-a concise human-readable table.  Suitable for running from the repo root:
+a concise human-readable table, plus optional JSON and per-job inspection.
+Suitable for running from the repo root:
 
     python scripts/slurm_overview.py --days 7 --limit 20
 
-Notes:
+Data sources
+------------
+- ``squeue -u USER`` for pending/running jobs (live scheduler state).
+- ``sacct --starttime now-NDAYS --user USER`` for final/ended jobs
+  (accounting database; depends on cluster retention/config).
+- Slurm log files (``logs/slurm-<jobname>-<jobid>.out`` etc.) for best-effort
+  failure clues via pattern matching.
+
+Notes
+-----
 - ``squeue`` only shows pending/running jobs; ``sacct`` is needed for
   completed/failed jobs (see ``logs/README.md``).
-- Most repo Slurm logs use ``#SBATCH --output=logs/slurm-%x-%j.out``.
-- Log lookup is configurable via ``--logs-dir`` so HPC runs using
-  absolute/shared log paths can be inspected too.
+- Most repo Slurm logs use ``#SBATCH --output=logs/slurm-%x-%j.out`` but
+  HPC runs may use absolute/shared paths — make lookup configurable via
+  ``--logs-dir``.
 - This is read-only; it does not mutate HPC artifacts.
+
+For a fuller guide (sample outputs, field definitions, state meanings,
+limitations) see ``docs/slurm_overview.md``.
 """
 
 from __future__ import annotations
@@ -548,13 +561,12 @@ def _build_overviews(
             )
             overviews[base] = ov
 
-    # Sort by start/end descending where possible, else job_id numeric descending
+    # Sort by end/start descending where possible, else job_id numeric descending
     def _sort_key(ov: JobOverview) -> Any:
-        # Try parse start as datetime string from sacct: YYYY-MM-DDTHH:MM:SS
-        for ts in (ov.start, ov.end):
+        # Prefer END (most recent completion) then START; sacct format YYYY-MM-DDTHH:MM:SS
+        for ts in (ov.end, ov.start):
             if ts and ts not in ("Unknown", "None", ""):
                 try:
-                    # sacct format is YYYY-MM-DDTHH:MM:SS
                     dt = datetime.fromisoformat(ts)
                     return dt
                 except ValueError:
@@ -563,7 +575,6 @@ def _build_overviews(
                         return dt
                     except ValueError:
                         pass
-        # Fallback sortable by job id numeric
         try:
             return datetime.min
         except Exception:
@@ -578,17 +589,93 @@ def _build_overviews(
     return sorted_ovs
 
 
-def _status_label(ov: JobOverview) -> str:
+def _derive_status(ov: JobOverview) -> str:
+    """Derived high-level status for table/JSON: success|failed|active|..."""
     if ov.is_active:
-        return ov.state or "ACTIVE"
+        return "active"
     state_upper = (ov.state or "").upper().split()[0] if ov.state else ""
     if state_upper == "COMPLETED" and (not ov.exit_code or ov.exit_code in ("0:0", "0")):
-        return "COMPLETED"
+        return "success"
     if ov.failure_reason:
-        return state_upper or "FAILED"
+        # Map known failure states to more specific status if desired
+        if state_upper == "CANCELLED":
+            return "cancelled"
+        if state_upper == "TIMEOUT":
+            return "timeout"
+        if state_upper == "OUT_OF_MEMORY":
+            return "oom"
+        if state_upper == "NODE_FAIL":
+            return "node_fail"
+        return "failed"
     if state_upper == "COMPLETED":
-        return "COMPLETED"
-    return state_upper or "UNKNOWN"
+        return "success" if (ov.exit_code or "") in ("0:0", "0", "") else "failed"
+    if state_upper in ("FAILED", "CANCELLED", "TIMEOUT", "OUT_OF_MEMORY", "NODE_FAIL", "DEADLINE", "BOOT_FAIL"):
+        return "failed"
+    return "unknown"
+
+
+def _state_display(ov: JobOverview) -> str:
+    """Raw Slurm STATE column (e.g. COMPLETED, FAILED, RUNNING)."""
+    state_upper = (ov.state or "").upper().split()[0] if ov.state else ""
+    return state_upper or (ov.state or "UNKNOWN")
+
+
+def _table_reason(ov: JobOverview) -> str:
+    """Best-effort REASON for table: state/exit/log with log_path hint."""
+    if ov.is_active:
+        return "currently running"
+    if ov.failure_reason:
+        if ov.log_path and ov.log_snippet:
+            # Pick most informative snippet line (prefer ModuleNotFoundError / Error: over generic Traceback)
+            def _snippet_content(line: str) -> str:
+                if ": " in line:
+                    _, content = line.split(": ", 1)
+                    return content.strip()
+                return line.strip()
+            # Prefer line containing ModuleNotFoundError, then 'Error:'/'Exception', then first
+            best = None
+            for line in ov.log_snippet:
+                c = _snippet_content(line)
+                if "ModuleNotFoundError" in c:
+                    best = c
+                    break
+            if best is None:
+                for line in ov.log_snippet:
+                    c = _snippet_content(line)
+                    if "Error:" in c or "Exception" in c or "not found" in c.lower() or "out of memory" in c.lower() or "killed" in c.lower():
+                        best = c
+                        break
+            if best is None:
+                best = _snippet_content(ov.log_snippet[0])
+            if len(best) > 60:
+                best = best[:60] + "..."
+            return f"{best} in {ov.log_path}"
+        if ov.log_path:
+            return f"{ov.failure_reason} in {ov.log_path}"
+        return ov.failure_reason
+    # Succeeded
+    state_upper = (ov.state or "").upper().split()[0] if ov.state else ""
+    if state_upper == "COMPLETED" and (not ov.exit_code or ov.exit_code in ("0:0", "0", "")):
+        return "-"
+    return ov.failure_reason or "-"
+
+
+def _source_list(ov: JobOverview) -> list[str]:
+    """JSON source field as list, e.g. ['sacct','log'] or ['squeue']."""
+    sources: list[str] = []
+    # ov.source is 'sacct'|'squeue'|'both'
+    if ov.source == "both":
+        sources = ["sacct", "squeue"]
+    elif ov.source:
+        sources = [ov.source]
+    else:
+        sources = []
+    if ov.log_path:
+        if "log" not in sources:
+            sources.append("log")
+    # Ensure stable order: sacct, squeue, log
+    order = {"sacct": 0, "squeue": 1, "log": 2}
+    return sorted(sources, key=lambda s: order.get(s, 99))
 
 
 def _success_failed_active_counts(overviews: list[JobOverview]) -> tuple[int, int, int]:
@@ -624,34 +711,41 @@ def _print_table(overviews: list[JobOverview], limit: int, warnings: list[str]) 
     print(f"Recent Slurm jobs (showing {len(truncated)} of {len(overviews)}; succeeded={succeeded} failed={failed} active={active})")
     print("")
 
-    # Compute column widths dynamically but capped
-    headers = ["JOBID", "NAME", "STATE", "EXIT", "ELAPSED", "START", "END", "WHY"]
-    # Build rows for width calc
+    # Expected shape (compact, matches docs/slurm_overview.md):
+    # JOBID  NAME  STATE  STATUS  EXIT  ELAPSED  END  REASON
+    headers = ["JOBID", "NAME", "STATE", "STATUS", "EXIT", "ELAPSED", "END", "REASON"]
     table_rows: list[list[str]] = []
     for ov in truncated:
-        why = ov.failure_reason or ("running" if ov.is_active else ("succeeded" if (ov.state or "").upper().startswith("COMPLETED") else ""))
-        # Truncate WHY for table
-        why_short = why[:50] + "..." if len(why) > 50 else why
+        state_col = _state_display(ov)[:14]
+        status_col = _derive_status(ov)[:10]
+        exit_col = ov.exit_code if ov.exit_code else ("-" if ov.is_active else "-")
+        # END: show YYYY-MM-DDTHH:MM (trim seconds) or "-" if active/unknown
+        if ov.is_active or not ov.end or ov.end in ("Unknown", "None", ""):
+            end_col = "-"
+        else:
+            # Keep original ISO but trim to minute for compactness: 2026-09-30T04:12
+            end_col = ov.end[:16] if len(ov.end) >= 16 else ov.end
+        reason = _table_reason(ov)
+        reason_short = (reason[:70] + "...") if len(reason) > 70 else reason
         table_rows.append(
             [
                 ov.job_id,
-                ov.job_name[:30],
-                _status_label(ov)[:14],
-                ov.exit_code or ("-" if ov.is_active else ov.exit_code),
-                ov.elapsed,
-                ov.start.replace("T", " ")[:19] if ov.start not in ("Unknown", "") else ov.start,
-                ov.end.replace("T", " ")[:19] if ov.end not in ("Unknown", "") else ov.end,
-                why_short,
+                ov.job_name[:24],
+                state_col,
+                status_col,
+                exit_col,
+                ov.elapsed or "-",
+                end_col,
+                reason_short,
             ]
         )
 
-    # Fixed widths - simple formatted table
-    col_widths = [8, 22, 12, 8, 10, 19, 19, 30]
-    # Adjust JOBID width to max
+    col_widths = [8, 24, 12, 10, 8, 10, 16, 45]
     for i, h in enumerate(headers):
         max_len = max(len(h), max((len(r[i]) for r in table_rows), default=0))
-        col_widths[i] = min(max_len + 2, col_widths[i] if i != 7 else 50)
-    # Ensure minimal
+        # REASON gets more width, others capped
+        cap = col_widths[i] if i != 7 else 55
+        col_widths[i] = min(max_len + 2, cap)
     col_widths[0] = max(col_widths[0], 8)
     col_widths[1] = max(col_widths[1], 10)
 
@@ -659,7 +753,6 @@ def _print_table(overviews: list[JobOverview], limit: int, warnings: list[str]) 
     print(fmt.format(*headers))
     print(fmt.format(*["-" * min(len(h), w) for h, w in zip(headers, col_widths)]))
     for row in table_rows:
-        # Truncate each cell to width
         truncated_row = [cell[:w] for cell, w in zip(row, col_widths)]
         print(fmt.format(*truncated_row))
 
@@ -695,24 +788,38 @@ def _overviews_to_json(overviews: list[JobOverview], warnings: list[str], limit:
     succeeded, failed, active = _success_failed_active_counts(overviews)
     jobs = []
     for ov in truncated:
+        status = _derive_status(ov)
+        reason = _table_reason(ov)
+        # For JSON reason, if table reason is "-" for success, normalize to ""
+        json_reason = "" if reason == "-" else reason
+        # Keep raw failure_reason as well for backward compat inside details
+        source_list = _source_list(ov)
         jobs.append(
             {
                 "job_id": ov.job_id,
                 "job_name": ov.job_name,
-                "state": ov.state,
+                "state": _state_display(ov),
+                "status": status,
                 "exit_code": ov.exit_code,
                 "elapsed": ov.elapsed,
                 "start": ov.start,
                 "end": ov.end,
-                "nodelist": ov.nodelist,
-                "req_mem": ov.req_mem,
-                "max_rss": ov.max_rss,
-                "alloc_tres": ov.alloc_tres,
-                "source": ov.source,
-                "is_active": ov.is_active,
-                "failure_reason": ov.failure_reason,
-                "success": not ov.is_active and not ov.failure_reason and (ov.state or "").upper().startswith("COMPLETED"),
+                "source": source_list,
                 "log_path": ov.log_path,
+                "reason": json_reason,
+                "details": {
+                    "node_list": ov.nodelist,
+                    "req_mem": ov.req_mem,
+                    "max_rss": ov.max_rss,
+                    "alloc_tres": ov.alloc_tres,
+                    "matched_log_lines": ov.log_snippet,
+                    # backward-compat / explicit aliases
+                    "raw_state": ov.state,
+                    "failure_reason": ov.failure_reason,
+                    "is_active": ov.is_active,
+                },
+                # legacy top-level aliases for older automation (kept, not documented as primary)
+                "exitCode": ov.exit_code,
                 "log_snippet": ov.log_snippet,
             }
         )
@@ -735,21 +842,72 @@ def _overviews_to_json(overviews: list[JobOverview], warnings: list[str], limit:
 def build_parser() -> argparse.ArgumentParser:
     default_user = os.environ.get("USER") or os.environ.get("LOGNAME") or getpass.getuser()
     parser = argparse.ArgumentParser(
-        description="Summarize recent Slurm jobs for the current user (squeue + sacct).",
+        description=(
+            "Summarize recent Slurm jobs for the current user by combining\n"
+            "`squeue` (active jobs) and `sacct` (recent completed jobs) plus\n"
+            "optional Slurm log inspection for failure clues.\n"
+            "\n"
+            "Run from the repo root, e.g.:\n"
+            "  python scripts/slurm_overview.py --days 7 --limit 20\n"
+        ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
+            "Columns (human table):\n"
+            "  JOBID     Slurm job id (numeric, e.g. 123457)\n"
+            "  NAME      Slurm job name (--job-name, e.g. embed-bach-symbolic)\n"
+            "  STATE     Raw Slurm state from sacct/squeue (see States below)\n"
+            "  STATUS    Derived summary: success | failed | active | cancelled |\n"
+            "            timeout | oom | node_fail | unknown\n"
+            "  EXIT      sacct ExitCode as \"exit:signal\" (\"0:0\" = ok, \"-\" if active)\n"
+            "  ELAPSED   Wall time used (HH:MM:SS)\n"
+            "  END       End timestamp (YYYY-MM-DDTHH:MM); \"-\" if still active/unknown\n"
+            "  REASON    Best-effort why (from state/exit/log), \"-\" if none, e.g.\n"
+            "            \"FAILED (exit 1:0)\" or \"ModuleNotFoundError in logs/...\"\n"
+            "\n"
+            "Fields (JSON --json):\n"
+            "  job_id, job_name, state, status, exit_code, elapsed, start, end,\n"
+            "  source, log_path, reason, details{node_list, matched_log_lines, ...}\n"
+            "  See docs/slurm_overview.md for full definitions and limitations.\n"
+            "\n"
+            "States (common):\n"
+            "  RUNNING       job is executing (squeue)\n"
+            "  PENDING       queued, waiting for resources\n"
+            "  COMPLETED     finished with 0:0 (see STATUS=success)\n"
+            "  FAILED        non-zero exit or batch step failure\n"
+            "  CANCELLED     killed by user or dependency\n"
+            "  TIMEOUT       exceeded --time walltime\n"
+            "  OUT_OF_MEMORY killed for memory (possibly oom-kill / MaxRSS ~ ReqMem)\n"
+            "  NODE_FAIL     node failure\n"
+            "\n"
             "Examples:\n"
+            "  # 1) Overview of recent jobs (default: last 7 days, 20 rows)\n"
             "  python scripts/slurm_overview.py --days 7 --limit 20\n"
-            "  python scripts/slurm_overview.py --days 14 --limit 25\n"
-            "  python scripts/slurm_overview.py --job 123456 --logs-dir logs\n"
+            "\n"
+            "  # 2) Inspect one job deeply (all sacct rows + log tail)\n"
+            "  python scripts/slurm_overview.py --job 123456\n"
+            "\n"
+            "  # 3) JSON output for automation (pipe to jq)\n"
             "  python scripts/slurm_overview.py --json --days 1 | jq .\n"
+            "  python scripts/slurm_overview.py --job 123456 --json | jq .\n"
+            "\n"
+            "  # 4) Using a non-default logs directory (absolute/shared HPC path)\n"
+            "  python scripts/slurm_overview.py --logs-dir /share/users/$USER/piano-clamp/logs\n"
+            "  python scripts/slurm_overview.py --job 123456 --logs-dir /home/student/w/wshelor/share/piano-clamp-runs/slurm\n"
+            "\n"
+            "Data sources & limitations:\n"
+            "  squeue   only shows active jobs; disappears on completion.\n"
+            "  sacct    depends on cluster accounting retention/configuration.\n"
+            "  logs     may be missing if jobs used different --output paths.\n"
+            "  children child rows like .batch/.extern are collapsed per parent job.\n"
+            "\n"
+            "Docs: docs/slurm_overview.md\n"
         ),
     )
     parser.add_argument("--days", type=int, default=7, help="Look back N days in sacct (default: 7)")
     parser.add_argument("--limit", type=int, default=20, help="Max jobs to show (default: 20)")
     parser.add_argument("--user", type=str, default=default_user, help="Slurm user to query (default: $USER)")
     parser.add_argument("--logs-dir", type=str, default="logs", help="Directory to search for Slurm log files (default: logs)")
-    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON (list of job objects; see docs/slurm_overview.md)")
     parser.add_argument("--job", type=str, default=None, help="Inspect a single JOBID deeply (shows all sacct rows and log tail)")
     return parser
 
@@ -843,15 +1001,81 @@ def main(argv: list[str] | None = None) -> int:
 
         # Build JSON or human output
         if args.json:
+            snippet = _extract_log_snippet(log_paths[0]) if log_paths else []
+            tail = _tail_file(log_paths[0], 80) if log_paths else []
+            # Derive spec-aligned fields for single-job inspection
+            state = ""
+            exit_code = ""
+            elapsed = ""
+            start = ""
+            end = ""
+            nodelist = ""
+            status = "unknown"
+            reason = ""
+            source_list: list[str] = []
+            if group_rows:
+                parent_tmp = _pick_parent(group_rows)
+                state = (parent_tmp.get("State") or "").strip()
+                exit_code = (parent_tmp.get("ExitCode") or "").strip()
+                elapsed = (parent_tmp.get("Elapsed") or "").strip()
+                start = (parent_tmp.get("Start") or "").strip()
+                end = (parent_tmp.get("End") or "").strip()
+                nodelist = (parent_tmp.get("NodeList") or "").strip()
+                # status/reason via same helpers as overview (synthesize JobOverview)
+                tmp_ov = JobOverview(
+                    job_id=job_id,
+                    job_name=job_name,
+                    state=state,
+                    exit_code=exit_code,
+                    elapsed=elapsed,
+                    start=start,
+                    end=end,
+                    nodelist=nodelist,
+                    req_mem=(parent_tmp.get("ReqMem") or "").strip(),
+                    max_rss=(parent_tmp.get("MaxRSS") or "").strip(),
+                    alloc_tres=(parent_tmp.get("AllocTRES") or "").strip(),
+                    source="sacct" if sacct_rows else ("squeue" if squeue_rows else ""),
+                    children=[r for r in group_rows if r is not parent_tmp],
+                    log_path=log_path_str,
+                    log_snippet=snippet,
+                    failure_reason=_failure_reason_for_group(parent_tmp, [r for r in group_rows if r is not parent_tmp], snippet),
+                    is_active=bool(squeue_rows),
+                )
+                status = _derive_status(tmp_ov)
+                reason = _table_reason(tmp_ov)
+                if reason == "-":
+                    reason = ""
+                source_list = _source_list(tmp_ov)
+            elif squeue_rows:
+                state = (squeue_rows[0].get("State") or "").strip()
+                status = "active"
+                reason = "currently running"
+                source_list = ["squeue"]
+                if log_path_str:
+                    source_list.append("log")
             payload = {
                 "job_id": job_id,
+                "job_name": job_name,
+                "state": state,
+                "status": status,
+                "exit_code": exit_code,
+                "elapsed": elapsed,
+                "start": start,
+                "end": end,
+                "source": source_list,
+                "log_path": log_path_str,
+                "reason": reason,
+                "details": {
+                    "node_list": nodelist,
+                    "matched_log_lines": snippet,
+                },
+                # extra context for deep dive
                 "warnings": warnings,
                 "sacct_rows": sacct_rows,
                 "squeue_rows": squeue_rows,
-                "log_path": log_path_str,
                 "log_paths": [str(p) for p in log_paths],
-                "log_snippet": _extract_log_snippet(log_paths[0]) if log_paths else [],
-                "log_tail": _tail_file(log_paths[0], 80) if log_paths else [],
+                "log_snippet": snippet,
+                "log_tail": tail,
             }
             print(json.dumps(payload, indent=2))
             return 0

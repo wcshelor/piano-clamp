@@ -110,10 +110,22 @@ class ClampBackend:
             shutil.copy2(self.vendor / "code" / name, destination / name)
         config_path = destination / "config.py"
         text = config_path.read_text(encoding="utf-8")
-        if self.model_space == "saas":
-            if '"weights_clamp3_c2"' not in text:
+        original = text
+        if self.model_space == "c2":
+            if '"weights_clamp3_c2"' in text:
+                pass
+            elif '"weights_clamp3_saas"' in text:
+                text = text.replace('"weights_clamp3_saas"', '"weights_clamp3_c2"', 1)
+            else:
+                raise ClampBackendError("cannot derive C2 runtime from the pinned upstream config")
+        else:  # saas
+            if '"weights_clamp3_saas"' in text:
+                pass
+            elif '"weights_clamp3_c2"' in text:
+                text = text.replace('"weights_clamp3_c2"', '"weights_clamp3_saas"', 1)
+            else:
                 raise ClampBackendError("cannot derive SAAS runtime from the pinned upstream config")
-            text = text.replace('"weights_clamp3_c2"', '"weights_clamp3_saas"', 1)
+        if text != original:
             config_path.write_text(text, encoding="utf-8")
         if self.config.get("low_memory_checkpoint_loading", True):
             extractor = destination / "extract_clamp3.py"
