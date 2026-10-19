@@ -19,7 +19,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
-from piano_clamp.data_loading import load_pipeline_config, read_corpus_manifest
+from piano_clamp.data_loading import load_pipeline_config, preflight_dataset
 from piano_clamp.embedding_io import (
     EmbeddingIOError, read_embedding_bundle, sha256_path, write_embedding_bundle,
 )
@@ -97,7 +97,16 @@ def refresh_inventory(inventory, output):
 def run(args):
     inventory = json.loads(args.inventory.read_text())
     output = args.output_root.resolve()
-    configs = [load_pipeline_config(path, device=args.device) for path in args.config]
+    manifests = getattr(args, 'manifest', None)
+    if manifests and len(manifests) != len(args.config):
+        raise ValueError('Repeat --manifest once per --config, in the same order')
+    configs = [load_pipeline_config(path, device=args.device, **(
+        {'manifest': manifests[i]} if manifests else {})) for i, path in enumerate(args.config)]
+    datasets = [preflight_dataset(config) for config in configs]
+    for config, rows in zip(configs, datasets):
+        print(json.dumps({'config': config.get('configuration_path'),
+            'corpus_root': config['corpus_root'], 'manifest': config['corpus_manifest'],
+            'composers': dict(Counter(row['composer'] for row in rows))}, indent=2), flush=True)
     vendor_commit = git_commit(configs[0]['vendor_root'])
     if vendor_commit == 'unavailable':
         raise ValueError('Cannot verify the CLaMP vendor commit')
@@ -121,7 +130,7 @@ def run(args):
     jobs = []
     owners = {}
     for index, config in enumerate(configs):
-        available = {row['composer'] for row in read_corpus_manifest(config['corpus_manifest'])}
+        available = {row['composer'] for row in datasets[index]}
         for composer in COMPOSERS:
             if composer not in available:
                 continue
@@ -198,6 +207,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--config', action='append', required=True,
         help='Repeat for non-overlapping composer manifests (e.g. Bach and Chopin/Mozart configs)')
+    parser.add_argument('--manifest', action='append', help='Explicit manifest override; repeat once per config in matching order')
     parser.add_argument('--inventory', type=Path, default=ROOT / 'reports/hpc/artifact_inventory/latest.json')
     parser.add_argument('--reuse-bundle', type=Path, action='append', help='Default: all available passage bundles in inventory')
     parser.add_argument('--output-root', type=Path, required=True, help='New isolated output root')

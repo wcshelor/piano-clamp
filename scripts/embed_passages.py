@@ -24,6 +24,7 @@ from piano_clamp.data_loading import (  # noqa: E402
     filter_manifest_rows,
     load_pipeline_config,
     read_corpus_manifest,
+    preflight_dataset,
 )
 from piano_clamp.embedding_io import (  # noqa: E402
     align_success_rows,
@@ -293,6 +294,7 @@ def _output_directory(output_root: Path, source_material: str) -> Path:
 
 def run(args: argparse.Namespace) -> dict[str, object]:
     config = load_pipeline_config(args.config, device=args.device)
+    preflight_dataset(config)
     source_material = _source_material(args)
     if args.modality == "audio" and source_material != "audio":
         raise ValueError("--modality audio requires --source-material audio")

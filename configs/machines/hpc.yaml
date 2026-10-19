@@ -1,0 +1,3 @@
+# Shared HPC machine defaults. Run configs own dataset/adapter selection.
+corpus_root: /home/student/w/wshelor/share/datasets/classical-performance-corpus
+device: auto

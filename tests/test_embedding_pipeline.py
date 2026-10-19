@@ -92,7 +92,7 @@ class PromptBankTests(unittest.TestCase):
                 root=root,
             )
             self.assertEqual(Path(resolved["corpus_root"]), corpus.resolve())
-            self.assertEqual(Path(resolved["adapter_root"]), adapter.resolve())
+            self.assertEqual(Path(resolved["adapter_root"]), (root / "data/cpc_adapter/example").resolve())
             self.assertEqual(Path(resolved["output_root"]), (root / "run_outputs").resolve())
 
     def test_embedding_config_can_disable_local_paths_overlay(self):

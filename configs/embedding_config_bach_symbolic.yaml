@@ -3,7 +3,7 @@
 #     --corpus-root "$PIANO_CLAMP_CORPUS_ROOT" \
 #     --output-root data/cpc_symbolic_adapter/bach-v0 \
 #     --composer Bach
-corpus_root: ${PIANO_CLAMP_CORPUS_ROOT}
+machine_profile: configs/machines/hpc.yaml
 use_local_paths_overlay: false
 adapter_root: data/cpc_symbolic_adapter/bach-v0
 corpus_manifest: piano_clamp_manifest.csv

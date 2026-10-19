@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import os
+import warnings
 import re
 import unicodedata
 from collections.abc import Iterable, Mapping
@@ -86,6 +87,14 @@ SYMBOLIC_IDENTITY_FIELDS = (
 )
 
 
+MACHINE_FIELDS = {
+    "corpus_root", "output_root", "embedding_store_root", "analysis_root",
+    "log_root", "temporary_root", "device", "num_workers", "batch_size_text",
+    "batch_size_symbolic", "batch_size_audio", "vendor_root", "checkpoint_path",
+    "saas_checkpoint_path",
+}
+
+
 class PipelineConfigurationError(ValueError):
     """Raised when a pipeline YAML cannot be resolved portably."""
 
@@ -134,7 +143,10 @@ def _expand_path(value: Any, *, field: str, environ: Mapping[str, str]) -> Path:
         resolved = environ.get(variable)
         if not resolved:
             raise PipelineConfigurationError(
-                f"{field} references {variable}, but that environment variable is not set"
+                f"{field} references {variable}, but that environment variable is not set. "
+                + ("On the HPC: export PIANO_CLAMP_CORPUS_ROOT="
+                   "/home/student/w/wshelor/share/datasets/classical-performance-corpus"
+                   if variable == "PIANO_CLAMP_CORPUS_ROOT" else f"Export {variable} before running.")
             )
         text = resolved
     else:
@@ -169,6 +181,7 @@ def load_pipeline_config(
     environ: Mapping[str, str] | None = None,
     root: str | Path | None = None,
     device: str | None = None,
+    manifest: str | Path | None = None,
 ) -> dict[str, Any]:
     """Load the embedding-pipeline YAML and resolve all paths.
 
@@ -183,13 +196,28 @@ def load_pipeline_config(
     if not config_path.is_file():
         raise PipelineConfigurationError(f"configuration file does not exist: {config_path}")
     config = _load_yaml_mapping(config_path, field="configuration")
+    if config.get("machine_profile"):
+        profile_path = _repo_path(config["machine_profile"], field="machine_profile", root=repo, environ=env)
+        profile = _load_yaml_mapping(profile_path, field="machine profile")
+        invalid = set(profile) - MACHINE_FIELDS
+        if invalid:
+            raise PipelineConfigurationError(f"machine profile contains non-machine settings: {sorted(invalid)}")
+        config = _merge_overlay(profile, config)
     overlay_path = config_path.with_name("paths.yaml")
     if (
         config_path.name != "paths.yaml"
         and config.get("use_local_paths_overlay", True)
         and overlay_path.is_file()
     ):
-        config = _merge_overlay(config, _load_yaml_mapping(overlay_path, field="paths.yaml"))
+        overlay = _load_yaml_mapping(overlay_path, field="paths.yaml")
+        ignored = set(overlay) - MACHINE_FIELDS
+        if ignored:
+            warnings.warn(f"{overlay_path}: ignoring non-machine settings {sorted(ignored)}; "
+                          "select adapters/manifests in the run config", UserWarning)
+        config = _merge_overlay(config, {k: v for k, v in overlay.items() if k in MACHINE_FIELDS})
+    if manifest is not None:
+        selected = _repo_path(str(manifest), field="manifest", root=repo, environ=env)
+        config.update(adapter_root=str(selected.parent), corpus_manifest=selected.name, alignment_root=".")
 
     corpus_root = _repo_path(
         config.get("corpus_root"), field="corpus_root", root=repo, environ=env
@@ -247,6 +275,20 @@ def load_pipeline_config(
     config.setdefault("batch_size_audio", 1)
     config.setdefault("num_workers", 0)
     return config
+
+
+def preflight_dataset(config: Mapping[str, Any]) -> list[dict[str, str]]:
+    """Validate read-only dataset inputs before model loading or output writes."""
+    corpus = Path(config["corpus_root"])
+    manifest = Path(config["corpus_manifest"])
+    if not corpus.is_dir() or not os.access(corpus, os.R_OK | os.X_OK):
+        raise PipelineConfigurationError(f"corpus directory is missing or unreadable: {corpus}")
+    if not manifest.is_file() or not os.access(manifest, os.R_OK):
+        raise PipelineConfigurationError(f"manifest is missing or unreadable: {manifest}")
+    rows = read_corpus_manifest(manifest)
+    if not rows:
+        raise PipelineConfigurationError(f"manifest has no records: {manifest}")
+    return rows
 
 
 def resolve_corpus_asset(corpus_root: str | Path, relative: str) -> Path:

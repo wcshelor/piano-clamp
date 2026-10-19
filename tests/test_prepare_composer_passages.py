@@ -87,7 +87,7 @@ class ReuseTests(unittest.TestCase):
             checkpoint.write_bytes(b'weights')
             config = dict(checkpoint_path=str(checkpoint),
                 checkpoint_sha256=module.sha256_path(checkpoint), normalize_embeddings=True,
-                vendor_root=str(root), corpus_manifest='manifest')
+                vendor_root=str(root), corpus_root=str(root), corpus_manifest='manifest')
             inventory = root / 'inventory.json'
             inventory.write_text(json.dumps(dict(artifacts=[], embedding_roots=[], store_roots=[])))
             args = argparse.Namespace(inventory=inventory, output_root=root / 'output',
@@ -110,7 +110,7 @@ class ReuseTests(unittest.TestCase):
 
             with patch.object(module, 'load_pipeline_config', return_value=config), \
                  patch.object(module, 'git_commit', return_value='vendor'), \
-                 patch.object(module, 'read_corpus_manifest', return_value=[{'composer': c} for c in module.COMPOSERS]), \
+                 patch.object(module, 'preflight_dataset', return_value=[{'composer': c} for c in module.COMPOSERS]), \
                  patch.object(module.subprocess, 'run', side_effect=embed), \
                  patch.object(module, 'refresh_inventory') as refresh:
                 module.run(args)

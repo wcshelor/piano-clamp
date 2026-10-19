@@ -7,7 +7,7 @@
 # Point the environment variable at a read-only external dataset root.
 # Prefer PIANO_CLAMP_DATASETS_ROOT (or PIANO_DATASETS_ROOT); PIANO_CLAMP_CORPUS_ROOT
 # is supported as an alias for backwards compatibility.
-corpus_root: ${PIANO_CLAMP_CORPUS_ROOT}
+machine_profile: configs/machines/hpc.yaml
 # Generated locally by scripts/prepare_cpc_adapter.py; never written into the external dataset.
 adapter_root: data/cpc_adapter/cpc-2026-08-19.2-v1
 corpus_manifest: piano_clamp_manifest.csv

@@ -8,7 +8,13 @@ The established HPC corpus directory is:
 /home/student/w/wshelor/share/datasets/classical-performance-corpus
 ```
 
-For configurations that reference `${PIANO_CLAMP_CORPUS_ROOT}`, set:
+The standard embedding configs load this path from `configs/machines/hpc.yaml`.
+Keep dataset selection (`adapter_root`, `corpus_manifest`, `alignment_root`)
+in run configs; `configs/paths.yaml` is restricted to machine settings and
+must not redirect a run to another adapter. Use explicit manifest overrides
+for ad hoc selections instead of cloning full embedding configs.
+
+For other configurations that reference `${PIANO_CLAMP_CORPUS_ROOT}`, set:
 
 ```bash
 export PIANO_CLAMP_CORPUS_ROOT=/home/student/w/wshelor/share/datasets/classical-performance-corpus

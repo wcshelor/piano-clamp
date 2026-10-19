@@ -96,17 +96,34 @@ piano-clamp validates manifests, extracts features, creates embeddings, analyzes
 embeddings, and renders review/result artifacts; dataset creation and
 audio-from-MIDI rendering belong in the dataset layer, not here.
 
-The normal local override mechanism is [configs/paths.yaml](configs/paths.yaml) (see
-[configs/paths.example.yaml](configs/paths.example.yaml)).
-`load_pipeline_config()` auto-merges that file when you pass
-`configs/embedding_config.yaml`, so in normal repo usage you should not need to
-manually export the dataset root every time.
+The standard embedding configs use `configs/machines/hpc.yaml` for the HPC
+corpus location, so the normal HPC workflow needs no environment export.
+Run configs select `adapter_root`, `corpus_manifest`, and `alignment_root`.
+Machine defaults are loaded first, followed by the run config, then optional
+machine-only overrides from ignored `configs/paths.yaml`.
 
-In practice:
+`paths.yaml` can override corpus/output locations, device, batch sizes, worker
+count, vendor location, and checkpoint locations. Dataset selection and model
+semantics in legacy copies are ignored with a warning. Move adapter/manifest
+settings into the run config; see `configs/paths.example.yaml`. Explicit
+`${VARIABLE}` references still require the variable to be set and report a
+setup hint when missing. Other machines can override `corpus_root` explicitly.
 
-- commit portable defaults in `configs/embedding_config.yaml`
-- keep machine-specific absolute paths in ignored `configs/paths.yaml`
-- pass `--config configs/embedding_config.yaml` to scripts
+For the three-composer passage workflow, validate before requesting a GPU:
+
+```bash
+python scripts/prepare_composer_passages.py \
+  --config configs/embedding_config.yaml \
+  --config configs/embedding_config_bach_symbolic.yaml \
+  --output-root /share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v1
+```
+
+Preflight reports resolved config, corpus, manifest and composer counts, checks
+readable dataset inputs and embedding compatibility, and writes no embeddings.
+Use repeated `--manifest PATH` options (one per config, in the same order) to
+select other manifests without duplicating configs. Add `--execute` in the GPU
+job after preflight passes. Execution refreshes the HPC inventory in its final
+step; commit the lightweight inventory files afterward.
 
 Key config fields:
 
