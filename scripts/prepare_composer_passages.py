@@ -39,7 +39,12 @@ def validate_bundle(path, config, vendor_commit):
     for key, value in expected.items():
         if meta.get(key) != value:
             raise EmbeddingIOError(f'{path}: incompatible or missing {key}: {meta.get(key)!r}; expected {value!r}')
-    if meta.get('source_material') not in {'score', 'symbolic'}:
+    # Legacy score-passage runs predate the source_material metadata field.
+    # Only their explicit symbolic passage stage establishes the fallback;
+    # never override an explicit conflicting source material.
+    legacy_score = (meta.get('source_material') in {None, ''}
+                    and meta.get('stage') == 'passages_symbolic')
+    if meta.get('source_material') not in {'score', 'symbolic'} and not legacy_score:
         raise EmbeddingIOError(f'{path}: not a score-symbolic bundle')
     if matrix.ndim != 2 or matrix.shape[1] != 768 or not np.isfinite(matrix).all():
         raise EmbeddingIOError(f'{path}: invalid matrix')
@@ -54,6 +59,8 @@ def validate_bundle(path, config, vendor_commit):
     for row in successful:
         if row.get('source_material') not in {None, '', 'score', 'symbolic'}:
             raise EmbeddingIOError(f'{path}: mixed source materials')
+        if row.get('embedding_modality') not in {None, '', 'score', 'symbolic'}:
+            raise EmbeddingIOError(f'{path}: incompatible row embedding modality')
     return matrix, successful, meta
 
 

@@ -55,6 +55,20 @@ class ReuseTests(unittest.TestCase):
             with self.assertRaisesRegex(EmbeddingIOError, 'checksum'):
                 module.validate_bundle(path, {'checkpoint_sha256': 'checkpoint'}, 'vendor')
 
+    def test_legacy_symbolic_stage_without_source_material_is_accepted(self):
+        with tempfile.TemporaryDirectory() as temp:
+            path = self.bundle(Path(temp), source_material=None, stage='passages_symbolic')
+            module.validate_bundle(path, {'checkpoint_sha256': 'checkpoint'}, 'vendor')
+
+    def test_missing_or_conflicting_legacy_provenance_is_rejected(self):
+        for changes in ({'source_material': None},
+                        {'source_material': None, 'stage': 'passages_audio'},
+                        {'source_material': 'performance_midi', 'stage': 'passages_symbolic'}):
+            with self.subTest(changes=changes), tempfile.TemporaryDirectory() as temp:
+                path = self.bundle(Path(temp), **changes)
+                with self.assertRaises(EmbeddingIOError):
+                    module.validate_bundle(path, {'checkpoint_sha256': 'checkpoint'}, 'vendor')
+
     def test_legacy_rows_without_hash_are_not_reused(self):
         with tempfile.TemporaryDirectory() as temp:
             matrix = np.ones((1, 768))

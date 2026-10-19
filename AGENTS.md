@@ -1,5 +1,34 @@
 # Piano CLaMP Agent Instructions
 
+## HPC Dataset Path and Preflight Checks
+
+The established HPC corpus directory is:
+
+```text
+/home/student/w/wshelor/share/datasets/classical-performance-corpus
+```
+
+For configurations that reference `${PIANO_CLAMP_CORPUS_ROOT}`, set:
+
+```bash
+export PIANO_CLAMP_CORPUS_ROOT=/home/student/w/wshelor/share/datasets/classical-performance-corpus
+```
+
+When creating or modifying dataset-consuming scripts and Slurm submission
+wrappers, include an early preflight check by default. Check that environment
+variables referenced by the selected configuration are set and non-empty,
+and that the resolved corpus directory and selected manifest exist and are
+readable. Fail before model loading or artifact writes with an actionable
+error naming the missing variable or path. For a missing
+`PIANO_CLAMP_CORPUS_ROOT` on the HPC, show the export command above.
+Submission wrappers should check before calling `sbatch` and ensure required
+variables are exported to the job environment.
+
+Respect explicitly configured paths and supported aliases; do not require
+this variable when the selected configuration does not use it. The HPC path
+is deployment documentation, not a portable default for other machines.
+Validate adapter/manifest composer coverage separately when required.
+
 ## Heavy HPC Artifacts
 
 Embeddings and embedding-store snapshots are heavy HPC artifacts and are not
