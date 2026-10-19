@@ -1,8 +1,8 @@
 # HPC Embedding Artifact Inventory
 
-Generated: 2026-10-15T09:21:20.540939+00:00
-Host: mgmt01.hpc
-Git commit: 31162fee52f9d90ce96c978c6098ef4e8485399c
+Generated: 2026-10-19T19:28:38.188712+00:00
+Host: hpc3-53
+Git commit: 9d7bf18c8d8c1cd07b8157bd4c5a5ca33e3683bb
 
 ## Current Live Bundles
 
@@ -20,9 +20,9 @@ Git commit: 31162fee52f9d90ce96c978c6098ef4e8485399c
 
 ## Snapshot Summary
 
-- Total artifacts: 26
+- Total artifacts: 27
 - Live artifacts: 9
-- Store snapshots: 17
+- Store snapshots: 18
 
 ## Files
 

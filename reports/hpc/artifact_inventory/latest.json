@@ -1,5 +1,5 @@
 {
-  "artifact_count": 26,
+  "artifact_count": 27,
   "artifacts": [
     {
       "artifact_id": "75c67b93d41e15fd",
@@ -442,6 +442,40 @@
       "table_sha256": "967ce62fbe3fd3056692b3c3308ebb36acc0b3820731b28290d239566fb491a9",
       "updated_at": "2026-09-05T22:22:23+00:00",
       "window_modes": "4,8,16,complete_movement"
+    },
+    {
+      "artifact_id": "f562db9477b7937f",
+      "checkpoint_hash": "e6fb0d139b24a1ec20836bb65bd652303d570ea9af2cddb20a1fc161421d64af",
+      "checkpoint_path": "${REPOSITORY_ROOT}/models/clamp3-c2/weights_clamp3_c2_h_size_768_t_model_FacebookAI_xlm-roberta-base_t_length_128_a_size_768_a_layers_12_a_length_128_s_size_768_s_layers_12_p_size_64_p_length_512.pth",
+      "composer_scope": "Fr\u00e9d\u00e9ric Chopin=19869",
+      "configuration_hash": "d45bb323a94f1dcd88ef901b5a665ed938496c459961c3c47120ea0a32f402ca",
+      "created_at": "2026-10-19T19:28:27.764049+00:00",
+      "device": "cuda",
+      "embedding_dimension": "768",
+      "embedding_shape": "19709x768",
+      "failure_count": "160",
+      "git_commit": "",
+      "kind": "passages_symbolic",
+      "location": "store",
+      "matrix_file": "passage_embeddings.npy",
+      "matrix_sha256": "12ae5395ddcf7265b117673bc3d07035d8119a8c1f57b02626823d143df12eb1",
+      "metadata_record_count": "19869",
+      "metadata_sha256": "643aa7f4bc182ac03bd500ba77330ad7af606d8a608e739940d05aa1cfec7471",
+      "model": "CLaMP 3",
+      "model_space": "c2",
+      "notes": "",
+      "overlap": "",
+      "path": "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v3/embedding_store/runs/20261019T144340Z-39fb3b7cf154/passages",
+      "row_count": "19709",
+      "run_id": "20261019T144340Z-39fb3b7cf154",
+      "snapshot_path": "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v3/embedding_store/runs/20261019T144340Z-39fb3b7cf154/passages",
+      "source_material": "score",
+      "stage": "passages_symbolic",
+      "status": "snapshot",
+      "table_file": "passage_embeddings.csv",
+      "table_sha256": "db21f64605ddda2ccaa42b18b85958bfba0ce2650d9b71f85d2c60b8b71ced97",
+      "updated_at": "2026-10-19T19:28:28+00:00",
+      "window_modes": "fixed_4_bars_stride_2,fixed_8_bars_stride_4,fixed_16_bars_stride_8"
     },
     {
       "artifact_id": "31a329c161c2fb31",
@@ -889,21 +923,30 @@
   "embedding_roots": [
     "/home/student/w/wshelor/share/piano-clamp-runs/embeddings",
     "/share/users/student/w/wshelor/piano-clamp-runs/embeddings",
-    "/share/users/student/w/wshelor/piano-clamp-runs/bach_symbolic_v0/embeddings"
+    "/share/users/student/w/wshelor/piano-clamp-runs/bach_symbolic_v0/embeddings",
+    "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v1",
+    "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v2",
+    "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v3"
   ],
-  "generated_at": "2026-10-15T09:21:20.540939+00:00",
-  "git_commit": "31162fee52f9d90ce96c978c6098ef4e8485399c",
-  "host": "mgmt01.hpc",
+  "generated_at": "2026-10-19T19:28:38.188712+00:00",
+  "git_commit": "9d7bf18c8d8c1cd07b8157bd4c5a5ca33e3683bb",
+  "host": "hpc3-53",
   "kinds": {
-    "passages_symbolic": 7,
+    "passages_symbolic": 8,
     "symbolic": 9,
     "text": 10
   },
   "live_count": 9,
-  "missing_roots": [],
-  "store_count": 17,
+  "missing_roots": [
+    "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v1/embedding_store",
+    "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v2/embedding_store"
+  ],
+  "store_count": 18,
   "store_roots": [
     "/share/users/student/w/wshelor/piano-clamp/embedding_store",
-    "/share/users/student/w/wshelor/piano-clamp-runs/bach_symbolic_v0/embedding_store"
+    "/share/users/student/w/wshelor/piano-clamp-runs/bach_symbolic_v0/embedding_store",
+    "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v1/embedding_store",
+    "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v2/embedding_store",
+    "/share/users/student/w/wshelor/piano-clamp-runs/composer_windows_v3/embedding_store"
   ]
 }
