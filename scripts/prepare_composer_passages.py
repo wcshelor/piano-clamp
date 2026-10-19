@@ -157,7 +157,10 @@ def run(args):
         for config, composer, root in jobs:
             root.mkdir(parents=True)
             derived = dict(config)
-            derived.update(use_local_paths_overlay=False, adapter_root=None,
+            # The manifest and alignment paths remain rooted in this adapter,
+            # which is outside the read-only corpus. Preserve that boundary
+            # when the child process reloads the resolved configuration.
+            derived.update(use_local_paths_overlay=False,
                 output_root=str(root), embedding_store_root=str(output / 'embedding_store'),
                 temporary_root=str(root / 'temp'), log_root=str(root / 'logs'))
             config_path = root / 'config.yaml'

@@ -85,16 +85,25 @@ class ReuseTests(unittest.TestCase):
             root = Path(temp)
             checkpoint = root / 'checkpoint'
             checkpoint.write_bytes(b'weights')
+            corpus = (root / 'corpus').resolve()
+            adapter = (root / 'adapter').resolve()
+            corpus.mkdir()
+            adapter.mkdir()
             config = dict(checkpoint_path=str(checkpoint),
                 checkpoint_sha256=module.sha256_path(checkpoint), normalize_embeddings=True,
-                vendor_root=str(root), corpus_root=str(root), corpus_manifest='manifest')
+                vendor_root=str(root), corpus_root=str(corpus), adapter_root=str(adapter),
+                corpus_manifest=str(adapter / 'manifest.csv'), alignment_root=str(adapter))
             inventory = root / 'inventory.json'
             inventory.write_text(json.dumps(dict(artifacts=[], embedding_roots=[], store_roots=[])))
             args = argparse.Namespace(inventory=inventory, output_root=root / 'output',
                 config=['config'], device='cpu', reuse_bundle=None, execute=True, chunk_size=25)
 
             def embed(command, **kwargs):
-                derived = yaml.safe_load(Path(command[command.index('--config') + 1]).read_text())
+                from piano_clamp.data_loading import load_pipeline_config
+                derived = load_pipeline_config(command[command.index('--config') + 1])
+                self.assertEqual(derived['adapter_root'], str(adapter))
+                self.assertEqual(derived['corpus_manifest'], str(adapter / 'manifest.csv'))
+                self.assertEqual(derived['alignment_root'], str(adapter))
                 composer = command[command.index('--composer') + 1]
                 matrix = np.zeros((3, 768), dtype=np.float32)
                 matrix[:, 0] = 1
