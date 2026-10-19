@@ -33,6 +33,7 @@ import hashlib
 import json
 import os
 import tempfile
+import time
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -355,7 +356,32 @@ def _extract_features_from_window_bytes(window_bytes: bytes, *, tmp_dir: Path | 
         p.unlink(missing_ok=True)
 
 
+class Progress:
+    """Flush phase progress to stderr while leaving stdout as the JSON summary."""
+
+    def __init__(self, phase: str, total: int, every: int):
+        self.phase, self.total, self.every = phase, total, every
+        self.started = self.last_report = time.monotonic()
+        print(f"{phase}: starting {total} items.", file=sys.stderr, flush=True)
+
+    def update(self, completed: int, details: str = "") -> None:
+        now = time.monotonic()
+        if (completed not in (1, self.total) and completed % self.every
+                and now - self.last_report < 30):
+            return
+        elapsed = now - self.started
+        rate = completed / elapsed if elapsed > 0 else 0
+        eta = f"{(self.total - completed) / rate:.0f}s" if rate else "unknown"
+        percent = 100 * completed / self.total if self.total else 100
+        print(f"{self.phase}: {completed}/{self.total} ({percent:.1f}%); "
+              f"elapsed {elapsed:.0f}s; {rate:.2f} items/s; ETA {eta}. {details}",
+              file=sys.stderr, flush=True)
+        self.last_report = now
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
+    status_every = getattr(args, "status_every", 25)
+    print("Validating embedding bundles and corpus root...", file=sys.stderr, flush=True)
     # ----- Preflight: bundles -----
     bundle_paths = [Path(p).resolve() for p in args.bundle]
     if not bundle_paths:
@@ -383,6 +409,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
     if args.limit is not None:
         selected = selected[: args.limit]
+    print(f"Selected {len(selected)} embedded passages from {len(bundle_paths)} bundles.",
+          file=sys.stderr, flush=True)
 
     output_dir = Path(args.output_dir).resolve()
     tables_dir = output_dir / "tables"
@@ -409,7 +437,8 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     # Classify rows
     immediate_failures: list[dict[str, Any]] = []
     ok_entries: list[dict[str, Any]] = []  # each entry: selected_index, row, bundle, classification
-    for entry in selected:
+    progress = Progress("Source checks", len(selected), status_every)
+    for index, entry in enumerate(selected, 1):
         row = entry["row"]
         cls = _classify_row(row, corpus_root)
         entry["classification"] = cls
@@ -443,12 +472,14 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             })
         else:
             ok_entries.append(entry)
+        progress.update(index, f"Eligible {len(ok_entries)}; excluded {len(immediate_failures)}.")
 
     # Deduplicate identical extraction inputs
     # Cache key = hash(source_hash + bar_start + bar_end + extractor_version)
     digest_to_entries: dict[str, list[dict[str, Any]]] = defaultdict(list)
     digest_info: dict[str, dict[str, Any]] = {}
-    for entry in ok_entries:
+    progress = Progress("Hashing extraction inputs", len(ok_entries), status_every)
+    for index, entry in enumerate(ok_entries, 1):
         cls = entry["classification"]
         resolved: Path = cls["resolved"]
         bar_start = cls["bar_start"]
@@ -467,6 +498,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                 "digest": digest,
                 "representative_passage_id": str(entry["row"].get("passage_id", "")),
             }
+        progress.update(index, f"Unique inputs {len(digest_info)}.")
 
     # Process each unique digest: resumable, atomic per digest
     # Cache files: .cache/<digest>.json for success, .cache/<digest>.failure.json for failure
@@ -474,7 +506,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     failure_by_digest: dict[str, dict[str, Any]] = {}
 
     # Load existing cache state
-    for digest in list(digest_info.keys()):
+    progress = Progress("Checking saved cache", len(digest_info), status_every)
+    for index, digest in enumerate(digest_info, 1):
+        if index > 1:
+            progress.update(index - 1, f"Cached successes {len(success_features_by_digest)}; "
+                            f"cached failures {len(failure_by_digest)}.")
         success_path = cache_dir / f"{digest}.json"
         failure_path = cache_dir / f"{digest}.failure.json"
         if success_path.is_file() and not args.reset_cache:
@@ -498,6 +534,10 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             except Exception:
                 pass
 
+    if digest_info:
+        progress.update(len(digest_info), f"Cached successes {len(success_features_by_digest)}; "
+                        f"cached failures {len(failure_by_digest)}.")
+
     # Determine which digests still need extraction
     pending_digests = [
         d for d in digest_info
@@ -506,9 +546,16 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     # If retry_failures, we already excluded failure_by_digest hits, so pending includes previous failures
     # Sort for determinism
     pending_digests.sort()
+    print(f"Cache ready: {len(success_features_by_digest)} successful inputs reused; "
+          f"{len(failure_by_digest)} cached failures; {len(pending_digests)} inputs to extract; "
+          f"{len(immediate_failures)} excluded passages. Completed extractions are saved individually.",
+          file=sys.stderr, flush=True)
 
     # Extraction loop with atomic per-completion saves
-    for digest in pending_digests:
+    cached_successes = len(success_features_by_digest)
+    cached_failures = len(failure_by_digest)
+    progress = Progress("Extracting features", len(pending_digests), status_every)
+    for index, digest in enumerate(pending_digests, 1):
         info = digest_info[digest]
         resolved: Path = info["resolved"]
         bar_start: int = info["bar_start"]
@@ -595,6 +642,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             if success_path.is_file():
                 success_path.unlink(missing_ok=True)
             failure_by_digest[digest] = payload
+            print(f"Extraction failed for {passage_id}: {msg}", file=sys.stderr, flush=True)
+        progress.update(index,
+            f"New successes {len(success_features_by_digest) - cached_successes}; "
+            f"new failures {len(failure_by_digest) - cached_failures}; "
+            f"cached successes {cached_successes}; last passage {passage_id}.")
 
     # Re-load any remaining failure cache that was hit but not in pending (for reporting)
     for digest in list(digest_info.keys()):
@@ -608,6 +660,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                     pass
 
     # Build final feature rows (one per passage_id) and failure rows
+    print("Assembling feature and failure tables...", file=sys.stderr, flush=True)
     feature_rows: list[dict[str, Any]] = []
     digest_failure_rows: list[dict[str, Any]] = []
 
@@ -694,6 +747,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
                       "bar_start", "bar_end", "window_bars", "passage_generation_method", "source_material", "source_path",
                       "source_hash", "digest", "extractor_version"] + list(FEATURE_FIELDS)
     feature_path = tables_dir / "musicxml_features.csv"
+    print(f"Writing tables and coverage reports to {output_dir}...", file=sys.stderr, flush=True)
     _atomic_csv(feature_path, feature_rows, feature_fields)
 
     failure_path = tables_dir / "musicxml_feature_failures.csv"
@@ -777,6 +831,9 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     }
     summary_path = reports_dir / "extraction_summary.json"
     _atomic_json(summary_path, summary)
+    print(f"Finished: {len(feature_rows)}/{total_selected} passages have features; "
+          f"{len(all_failures)} failures/exclusions. Summary: {summary_path}",
+          file=sys.stderr, flush=True)
 
     # Validation: every selected passage has either features or failure (already)
     return summary
@@ -788,6 +845,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--corpus-root", help="Corpus root directory; defaults to $PIANO_CLAMP_CORPUS_ROOT or $PIANO_CLAMP_DATASETS_ROOT. Must be readable.")
     parser.add_argument("--output-dir", required=True, help="Output directory for feature tables and coverage reports")
     parser.add_argument("--limit", type=int, help="Limit number of passages (for small sample before full extraction)")
+    parser.add_argument("--status-every", type=int, default=25,
+                        help="Print progress every N items (default: 25), or after 30 seconds between completed items")
     parser.add_argument("--reset-cache", action="store_true", help="Clear existing feature cache before extraction (forces re-extraction)")
     parser.add_argument("--retry-failures", action="store_true", help="Retry previously failed extractions instead of skipping them")
     parser.add_argument("--force", action="store_true", help="Overwrite existing output tables if they exist")
@@ -799,6 +858,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.limit is not None and args.limit < 1:
         parser.error("--limit must be positive")
+    if args.status_every < 1:
+        parser.error("--status-every must be positive")
     # Guard against overwriting without --force if outputs exist and not resuming?
     # For resumable behavior, we allow overwrite of tables but cache is reused.
     # If tables exist and --force not given, we still update atomically (resume). So no guard.
