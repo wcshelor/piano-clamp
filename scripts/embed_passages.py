@@ -513,6 +513,8 @@ def run(args: argparse.Namespace) -> dict[str, object]:
                 or record_index == len(records)
                 or record_index % args.status_every == 0
             ):
+                state["record_status"] = status_map
+                _save_resume_state(resume_dir, state)
                 prepared_elapsed = time.monotonic() - started_at
                 resolved = sum(1 for item in status_map.values() if item.get("status") in {"success", "failed"})
                 rate = record_index / prepared_elapsed if prepared_elapsed > 0 else 0.0
@@ -583,6 +585,7 @@ def run(args: argparse.Namespace) -> dict[str, object]:
                         _atomic_npy(vector_cache / f"{digest}.npy", vector)
                         for passage_id in digest_to_passage_ids.get(digest, []):
                             status_map[passage_id] = {
+                                **status_map.get(passage_id, {}),
                                 "status": "success",
                                 "error_message": "",
                                 "content_hash": digest,
@@ -590,6 +593,7 @@ def run(args: argparse.Namespace) -> dict[str, object]:
                     for digest, message in errors.items():
                         for passage_id in digest_to_passage_ids.get(digest, []):
                             status_map[passage_id] = {
+                                **status_map.get(passage_id, {}),
                                 "status": "failed",
                                 "error_message": message,
                                 "content_hash": digest,
@@ -769,6 +773,14 @@ def main(argv: list[str] | None = None) -> int:
     except Exception as exc:
         parser.exit(2, f"error: {exc}\n")
     print(result)
+    if result["failed"]:
+        print(
+            f"{result['failed']} passages failed; successful vectors are saved. "
+            f"Failure details: {result['failed_rows_path']}. "
+            f"Resume cache: {result['resume_directory']}. "
+            "Rerun the same command with --force to retry failed passages and reuse saved vectors.",
+            file=sys.stderr, flush=True,
+        )
     return 1 if result["failed"] else 0
 
 

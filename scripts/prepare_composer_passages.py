@@ -94,6 +94,21 @@ def refresh_inventory(inventory, output):
     subprocess.run(command, check=True, cwd=ROOT)
 
 
+def derived_config(config, root, output):
+    derived = dict(config)
+    derived.update(use_local_paths_overlay=False,
+        output_root=str(root), embedding_store_root=str(output / 'embedding_store'),
+        temporary_root=str(root / 'temp'), log_root=str(root / 'logs'))
+    return derived
+
+
+def check_resume_config(root, expected):
+    path = root / 'config.yaml'
+    if not path.is_file() or yaml.safe_load(path.read_text()) != expected:
+        raise ValueError(f'{root}: saved config does not match this run; '
+                         'restore the original inputs or choose a new --output-root')
+
+
 def run(args):
     inventory = json.loads(args.inventory.read_text())
     output = args.output_root.resolve()
@@ -140,12 +155,15 @@ def run(args):
             slug = ('bach', 'chopin', 'mozart')[COMPOSERS.index(composer)]
             root = output / slug
             if root.exists():
-                raise ValueError(f'Refusing existing output directory: {root}; choose a new --output-root')
+                if not getattr(args, 'resume', False):
+                    raise ValueError(f'Refusing existing output directory: {root}; '
+                                     'use --resume with the same inputs to preserve progress')
+                check_resume_config(root, derived_config(config, root, output))
             jobs.append((config, composer, root))
     missing = set(COMPOSERS) - owners.keys()
     if missing:
         raise ValueError(f'Manifests do not cover composers: {sorted(missing)}')
-    if (output / 'merged').exists():
+    if (output / 'merged').exists() and not getattr(args, 'resume', False):
         raise ValueError('Merged output already exists; choose a new --output-root')
     print(json.dumps({'jobs': [{'composer': c, 'output': str(r), 'windows': [4, 8, 16],
         'strides': [2, 4, 8]} for _, c, r in jobs], 'compatible_reuse_bundles': len(bundles),
@@ -155,22 +173,33 @@ def run(args):
     try:
         generated = []
         for config, composer, root in jobs:
-            root.mkdir(parents=True)
-            derived = dict(config)
+            root.mkdir(parents=True, exist_ok=True)
+            derived = derived_config(config, root, output)
             # The manifest and alignment paths remain rooted in this adapter,
             # which is outside the read-only corpus. Preserve that boundary
             # when the child process reloads the resolved configuration.
-            derived.update(use_local_paths_overlay=False,
-                output_root=str(root), embedding_store_root=str(output / 'embedding_store'),
-                temporary_root=str(root / 'temp'), log_root=str(root / 'logs'))
             config_path = root / 'config.yaml'
-            config_path.write_text(yaml.safe_dump(derived))
+            if not config_path.exists():
+                temporary_config = root / '.config.yaml.tmp'
+                temporary_config.write_text(yaml.safe_dump(derived))
+                temporary_config.replace(config_path)
             seed_cache(root / 'passages/.resume/vectors', bundles)
             command = [sys.executable, str(ROOT / 'scripts/embed_passages.py'),
                 '--config', str(config_path), '--device', args.device,
                 '--source-material', 'score', '--composer', composer, '--overlap-half',
                 '--mode', '4', '--mode', '8', '--mode', '16', '--chunk-size', str(args.chunk_size)]
-            subprocess.run(command, check=True, cwd=ROOT)
+            if getattr(args, 'resume', False):
+                command.append('--force')
+            try:
+                subprocess.run(command, check=True, cwd=ROOT)
+            except subprocess.CalledProcessError as exc:
+                raise ValueError(
+                    f'{composer}: passage process exited {exc.returncode}. '
+                    f'Saved progress remains in {root / "passages/.resume"}. '
+                    f'Inspect {root / "passages/.resume/failed_passages.csv"} and '
+                    f'{root / "logs"} for the underlying error. '
+                    'Rerun this workflow with the same inputs and --resume.'
+                ) from exc
             generated.append(validate_bundle(root / 'passages', configs[0], vendor_commit))
         vectors, rows, ids = [], [], set()
         coverage = Counter()
@@ -200,7 +229,7 @@ def run(args):
         write_embedding_bundle(output / 'merged', np.stack(vectors), rows,
             matrix_filename='passage_embeddings.npy', table_filename='passage_embeddings.csv',
             fields=list(dict.fromkeys(k for row in rows for k in row)),
-            id_field='passage_id', metadata=meta)
+            id_field='passage_id', metadata=meta, force=getattr(args, 'resume', False))
         print(json.dumps({'merged': str(output / 'merged'), 'coverage': dict(coverage)}, indent=2))
     finally:
         refresh_inventory(inventory, output)
@@ -217,6 +246,8 @@ def main():
     parser.add_argument('--device', choices=('auto', 'cpu', 'cuda'), default='cuda')
     parser.add_argument('--chunk-size', type=int, default=25)
     parser.add_argument('--execute', action='store_true', help='Generate embeddings; otherwise only validate and plan')
+    parser.add_argument('--resume', action='store_true',
+        help='Resume the same output root after checking saved configs; reuse cached vectors and retry failures')
     args = parser.parse_args()
     if args.chunk_size < 1:
         parser.error('--chunk-size must be positive')

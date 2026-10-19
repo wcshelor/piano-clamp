@@ -78,6 +78,7 @@ class ReuseTests(unittest.TestCase):
     def test_workflow_generates_all_composer_windows_and_refreshes(self):
         import argparse
         import json
+        import subprocess
         from unittest.mock import patch
         import yaml
 
@@ -97,6 +98,7 @@ class ReuseTests(unittest.TestCase):
             inventory.write_text(json.dumps(dict(artifacts=[], embedding_roots=[], store_roots=[])))
             args = argparse.Namespace(inventory=inventory, output_root=root / 'output',
                 config=['config'], device='cpu', reuse_bundle=None, execute=True, chunk_size=25)
+            attempts = []
 
             def embed(command, **kwargs):
                 from piano_clamp.data_loading import load_pipeline_config
@@ -105,6 +107,17 @@ class ReuseTests(unittest.TestCase):
                 self.assertEqual(derived['corpus_manifest'], str(adapter / 'manifest.csv'))
                 self.assertEqual(derived['alignment_root'], str(adapter))
                 composer = command[command.index('--composer') + 1]
+                attempts.append(composer)
+                if composer == module.COMPOSERS[1] and not getattr(args, 'resume', False):
+                    cache = Path(derived['output_root']) / 'passages/.resume/vectors'
+                    cache.mkdir(parents=True, exist_ok=True)
+                    np.save(cache / 'saved.npy', np.ones(768))
+                    raise subprocess.CalledProcessError(1, command)
+                if getattr(args, 'resume', False):
+                    self.assertIn('--force', command)
+                    if composer == module.COMPOSERS[1]:
+                        self.assertTrue((Path(derived['output_root']) /
+                            'passages/.resume/vectors/saved.npy').is_file())
                 matrix = np.zeros((3, 768), dtype=np.float32)
                 matrix[:, 0] = 1
                 rows = [dict(passage_id=f'{composer}-{size}', composer=composer,
@@ -115,15 +128,27 @@ class ReuseTests(unittest.TestCase):
                     matrix_filename='passage_embeddings.npy', table_filename='passage_embeddings.csv',
                     fields=list(rows[0]), id_field='passage_id', metadata=dict(model_space='c2',
                     checkpoint_hash=config['checkpoint_sha256'], CLaMP_repository_commit='vendor',
-                    source_material='score'))
+                    source_material='score'), force='--force' in command)
 
             with patch.object(module, 'load_pipeline_config', return_value=config), \
                  patch.object(module, 'git_commit', return_value='vendor'), \
                  patch.object(module, 'preflight_dataset', return_value=[{'composer': c} for c in module.COMPOSERS]), \
                  patch.object(module.subprocess, 'run', side_effect=embed), \
                  patch.object(module, 'refresh_inventory') as refresh:
-                module.run(args)
+                with self.assertRaisesRegex(ValueError, 'Saved progress remains'):
+                    module.run(args)
                 refresh.assert_called_once()
+                args.resume = True
+                module.run(args)
+                self.assertEqual(refresh.call_count, 2)
+                self.assertEqual(attempts, list(module.COMPOSERS[:2]) + list(module.COMPOSERS))
+                # Resuming a completed merge is safe as well.
+                module.run(args)
+                self.assertEqual(refresh.call_count, 3)
+                config['normalize_embeddings'] = 'changed'
+                with self.assertRaisesRegex(ValueError, 'saved config does not match'):
+                    module.run(args)
+                self.assertEqual(refresh.call_count, 3)
             matrix, rows, metadata = module.read_embedding_bundle(root / 'output/merged')
             self.assertEqual(matrix.shape, (9, 768))
             self.assertEqual(len(metadata['coverage']), 9)
