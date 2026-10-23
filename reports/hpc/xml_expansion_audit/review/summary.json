@@ -1,0 +1,13 @@
+{
+  "already_represented": 96,
+  "approved_additions": 37,
+  "duplicate_movement_editions": 2,
+  "note": "Candidates are grouped by identical XML checksums then by conservative candidate identity (composer|catalogue|movement). Approved additions are solo-piano, non-conflicting, not already represented, with representative version per movement.",
+  "output_manifest_rows": 37,
+  "quarantined_conflicts": 1,
+  "total_hash_groups": 138,
+  "total_usable_rows": 168,
+  "unresolved_missing_evidence": 0,
+  "unresolved_other": 0,
+  "unresolved_uncertain_instrumentation": 2
+}

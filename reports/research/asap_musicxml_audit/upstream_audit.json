@@ -1,0 +1,547 @@
+{
+  "revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+  "matcher": "pitched-events-and-part-duration-v1-960",
+  "scope": "upstream samples only; not HPC passage coverage",
+  "works": [
+    {
+      "work": "Chopin/Scherzos/31",
+      "xml_sha256": "353c60451895ea99ca9b6ae5ffff72c8cfd57a6ea7ab83db194f7bd64df9b117",
+      "midi_sha256": "e32afbe846af4e725a8262697c623e6f779f3645093cd47868b67bb510ebfeaa",
+      "xml_measure_counts": [
+        780,
+        780
+      ],
+      "midi_import_measure_counts": [
+        774,
+        585
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 291,
+          "midi_end": 294,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 582,
+          "midi_end": 585,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 289,
+          "midi_end": 296,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 578,
+          "midi_end": 585,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 285,
+          "midi_end": 300,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 570,
+          "midi_end": 585,
+          "xml_matches": []
+        }
+      ]
+    },
+    {
+      "work": "Chopin/Ballades/1",
+      "xml_sha256": "cf4464f7c3873c48aa6abb45312961c2fb41bedb53e58758d0acec3ba533635e",
+      "midi_sha256": "1b8f2f90758dff8daf2dedf87e4d485bafb15c7b45d6d84c34ebf8e2b2c6a8be",
+      "xml_measure_counts": [
+        264,
+        264
+      ],
+      "midi_import_measure_counts": [
+        264,
+        364
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 130,
+          "midi_end": 133,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 261,
+          "midi_end": 264,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 128,
+          "midi_end": 135,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 257,
+          "midi_end": 264,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 124,
+          "midi_end": 139,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 249,
+          "midi_end": 264,
+          "xml_matches": []
+        }
+      ]
+    },
+    {
+      "work": "Chopin/Etudes_op_10/8",
+      "xml_sha256": "315c0562cb1c6f23300b9513b52e8a569640435df2c979aa9fabd70f85385870",
+      "midi_sha256": "3caed8f22f4719defe2ef42d328993c6806b396124840336711d210518ad8036",
+      "xml_measure_counts": [
+        96,
+        96
+      ],
+      "midi_import_measure_counts": [
+        96,
+        96
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 46,
+          "midi_end": 49,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 93,
+          "midi_end": 96,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 44,
+          "midi_end": 51,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 89,
+          "midi_end": 96,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 40,
+          "midi_end": 55,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 81,
+          "midi_end": 96,
+          "xml_matches": []
+        }
+      ]
+    },
+    {
+      "work": "Chopin/Barcarolle",
+      "xml_sha256": "f36c8c5793bb3c0f20d2db0c6ff9fd3eebb4ea52265c794e206cdaa6dd8be16f",
+      "midi_sha256": "f7aa1c52ac5240693807d2debda44ceeb2405dec14aea94b89fb4328ec8d003c",
+      "xml_measure_counts": [
+        116,
+        116
+      ],
+      "midi_import_measure_counts": [
+        76,
+        174
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 36,
+          "midi_end": 39,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 73,
+          "midi_end": 76,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 34,
+          "midi_end": 41,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 69,
+          "midi_end": 76,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 30,
+          "midi_end": 45,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 61,
+          "midi_end": 76,
+          "xml_matches": []
+        }
+      ]
+    },
+    {
+      "work": "Chopin/Polonaises/53",
+      "xml_sha256": "7d9590750c223d58be5b7a99d771bf4b4e9927e7d1175e09d49e6949b695ea47",
+      "midi_sha256": "eb0186d37e2ffae373a48e6c7694e2f462d46a31c73dabd4a9a041bd272dcab7",
+      "xml_measure_counts": [
+        181,
+        181
+      ],
+      "midi_import_measure_counts": [
+        181,
+        147
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 72,
+          "midi_end": 75,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 144,
+          "midi_end": 147,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 70,
+          "midi_end": 77,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 140,
+          "midi_end": 147,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 66,
+          "midi_end": 81,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 132,
+          "midi_end": 147,
+          "xml_matches": []
+        }
+      ]
+    },
+    {
+      "work": "Chopin/Berceuse_op_57",
+      "xml_sha256": "f6a7d0370e83180a4f6b1ad4dddc62bf6b9a9d927acf2277121c1c1d98168184",
+      "midi_sha256": "c191beda0bf57f05956be75c98159de6313b2928c5504243c08de899ea50450f",
+      "xml_measure_counts": [
+        70,
+        70
+      ],
+      "midi_import_measure_counts": [
+        70,
+        52
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 24,
+          "midi_end": 27,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 49,
+          "midi_end": 52,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 22,
+          "midi_end": 29,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 45,
+          "midi_end": 52,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 18,
+          "midi_end": 33,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 37,
+          "midi_end": 52,
+          "xml_matches": []
+        }
+      ]
+    },
+    {
+      "work": "Chopin/Etudes_op_10/5",
+      "xml_sha256": "f9f663b78c683af3fa58ebdfc4e10f14c24fc06ee472565a78a0266ac78c95f0",
+      "midi_sha256": "527de66d9659aa702d3a615ab99800f68bc62e87adf52b66560b8e53c81d4201",
+      "xml_measure_counts": [
+        85,
+        85
+      ],
+      "midi_import_measure_counts": [
+        85,
+        43
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 20,
+          "midi_end": 23,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 40,
+          "midi_end": 43,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 18,
+          "midi_end": 25,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 36,
+          "midi_end": 43,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 14,
+          "midi_end": 29,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 28,
+          "midi_end": 43,
+          "xml_matches": []
+        }
+      ]
+    },
+    {
+      "work": "Chopin/Etudes_op_25/1",
+      "xml_sha256": "588212fe12e1c74134f272d53afddd995368c69d15f5988082084420fd902f9b",
+      "midi_sha256": "efa1294c3b65c7cf3c3f1297b431e0bb1de9946989ff15161f4803e1e4a690bc",
+      "xml_measure_counts": [
+        50,
+        50
+      ],
+      "midi_import_measure_counts": [
+        50,
+        50
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 23,
+          "midi_end": 26,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 47,
+          "midi_end": 50,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 21,
+          "midi_end": 28,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 43,
+          "midi_end": 50,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 17,
+          "midi_end": 32,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 35,
+          "midi_end": 50,
+          "xml_matches": []
+        }
+      ]
+    },
+    {
+      "work": "Chopin/Etudes_op_10/10",
+      "xml_sha256": "15951231417e0a8c2fa88ade49787172e9d405a3823738d0f1744b4f182b6205",
+      "midi_sha256": "dad10ea9ef8c238acd67af6d41d370ce0b84418b935ce2da997fdf312044086a",
+      "xml_measure_counts": [
+        78,
+        78
+      ],
+      "midi_import_measure_counts": [
+        78,
+        116
+      ],
+      "sample_windows": [
+        {
+          "midi_start": 1,
+          "midi_end": 4,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 37,
+          "midi_end": 40,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 75,
+          "midi_end": 78,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 8,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 35,
+          "midi_end": 42,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 71,
+          "midi_end": 78,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 1,
+          "midi_end": 16,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 31,
+          "midi_end": 46,
+          "xml_matches": []
+        },
+        {
+          "midi_start": 63,
+          "midi_end": 78,
+          "xml_matches": []
+        }
+      ]
+    }
+  ]
+}

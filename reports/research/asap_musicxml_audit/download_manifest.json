@@ -1,0 +1,95 @@
+{
+  "revision": "afc815c75c42e83a79c03feb6da8a35e77d4c6b8",
+  "files": [
+    {
+      "path": "Chopin/Scherzos/31/xml_score.musicxml",
+      "bytes": 3250471,
+      "sha256": "353c60451895ea99ca9b6ae5ffff72c8cfd57a6ea7ab83db194f7bd64df9b117"
+    },
+    {
+      "path": "Chopin/Scherzos/31/midi_score.mid",
+      "bytes": 43510,
+      "sha256": "e32afbe846af4e725a8262697c623e6f779f3645093cd47868b67bb510ebfeaa"
+    },
+    {
+      "path": "Chopin/Ballades/1/xml_score.musicxml",
+      "bytes": 2349744,
+      "sha256": "cf4464f7c3873c48aa6abb45312961c2fb41bedb53e58758d0acec3ba533635e"
+    },
+    {
+      "path": "Chopin/Ballades/1/midi_score.mid",
+      "bytes": 60351,
+      "sha256": "1b8f2f90758dff8daf2dedf87e4d485bafb15c7b45d6d84c34ebf8e2b2c6a8be"
+    },
+    {
+      "path": "Chopin/Etudes_op_10/8/xml_score.musicxml",
+      "bytes": 1025794,
+      "sha256": "315c0562cb1c6f23300b9513b52e8a569640435df2c979aa9fabd70f85385870"
+    },
+    {
+      "path": "Chopin/Etudes_op_10/8/midi_score.mid",
+      "bytes": 14243,
+      "sha256": "3caed8f22f4719defe2ef42d328993c6806b396124840336711d210518ad8036"
+    },
+    {
+      "path": "Chopin/Barcarolle/xml_score.musicxml",
+      "bytes": 2180666,
+      "sha256": "f36c8c5793bb3c0f20d2db0c6ff9fd3eebb4ea52265c794e206cdaa6dd8be16f"
+    },
+    {
+      "path": "Chopin/Barcarolle/midi_score.mid",
+      "bytes": 34672,
+      "sha256": "f7aa1c52ac5240693807d2debda44ceeb2405dec14aea94b89fb4328ec8d003c"
+    },
+    {
+      "path": "Chopin/Polonaises/53/xml_score.musicxml",
+      "bytes": 2702362,
+      "sha256": "7d9590750c223d58be5b7a99d771bf4b4e9927e7d1175e09d49e6949b695ea47"
+    },
+    {
+      "path": "Chopin/Polonaises/53/midi_score.mid",
+      "bytes": 40298,
+      "sha256": "eb0186d37e2ffae373a48e6c7694e2f462d46a31c73dabd4a9a041bd272dcab7"
+    },
+    {
+      "path": "Chopin/Berceuse_op_57/xml_score.musicxml",
+      "bytes": 871224,
+      "sha256": "f6a7d0370e83180a4f6b1ad4dddc62bf6b9a9d927acf2277121c1c1d98168184"
+    },
+    {
+      "path": "Chopin/Berceuse_op_57/midi_score.mid",
+      "bytes": 11117,
+      "sha256": "c191beda0bf57f05956be75c98159de6313b2928c5504243c08de899ea50450f"
+    },
+    {
+      "path": "Chopin/Etudes_op_10/5/xml_score.musicxml",
+      "bytes": 943527,
+      "sha256": "f9f663b78c683af3fa58ebdfc4e10f14c24fc06ee472565a78a0266ac78c95f0"
+    },
+    {
+      "path": "Chopin/Etudes_op_10/5/midi_score.mid",
+      "bytes": 10058,
+      "sha256": "527de66d9659aa702d3a615ab99800f68bc62e87adf52b66560b8e53c81d4201"
+    },
+    {
+      "path": "Chopin/Etudes_op_25/1/xml_score.musicxml",
+      "bytes": 1356791,
+      "sha256": "588212fe12e1c74134f272d53afddd995368c69d15f5988082084420fd902f9b"
+    },
+    {
+      "path": "Chopin/Etudes_op_25/1/midi_score.mid",
+      "bytes": 13593,
+      "sha256": "efa1294c3b65c7cf3c3f1297b431e0bb1de9946989ff15161f4803e1e4a690bc"
+    },
+    {
+      "path": "Chopin/Etudes_op_10/10/xml_score.musicxml",
+      "bytes": 964296,
+      "sha256": "15951231417e0a8c2fa88ade49787172e9d405a3823738d0f1744b4f182b6205"
+    },
+    {
+      "path": "Chopin/Etudes_op_10/10/midi_score.mid",
+      "bytes": 16609,
+      "sha256": "dad10ea9ef8c238acd67af6d41d370ce0b84418b935ce2da997fdf312044086a"
+    }
+  ]
+}

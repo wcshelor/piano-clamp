@@ -1,0 +1,116 @@
+[
+  {
+    "evidence": {
+      "catalogue_set": [],
+      "conflicting_catalogues": false,
+      "conflicting_movements": false,
+      "missing_evidence": true,
+      "movement_set": [],
+      "title_path_catalogue_mismatches": [],
+      "title_path_movement_mismatches": []
+    },
+    "sha256": "6e00f53fea0f3619791efc6e488c40556165d4d51260407589a67b30033fe441",
+    "type": "missing_evidence",
+    "work_ids": [
+      "wrk_560529b61ee8"
+    ]
+  },
+  {
+    "evidence": {
+      "catalogue_set": [],
+      "conflicting_catalogues": false,
+      "conflicting_movements": false,
+      "missing_evidence": true,
+      "movement_set": [],
+      "title_path_catalogue_mismatches": [],
+      "title_path_movement_mismatches": []
+    },
+    "sha256": "7d9590750c223d58be5b7a99d771bf4b4e9927e7d1175e09d49e6949b695ea47",
+    "type": "missing_evidence",
+    "work_ids": [
+      "wrk_ef4076dd461d"
+    ]
+  },
+  {
+    "evidence": {
+      "catalogue_set": [],
+      "conflicting_catalogues": false,
+      "conflicting_movements": false,
+      "missing_evidence": true,
+      "movement_set": [
+        "1"
+      ],
+      "title_path_catalogue_mismatches": [],
+      "title_path_movement_mismatches": []
+    },
+    "sha256": "d1573484bfd6b78f7c0d26e4db2832fd8417aaee7b972ae8de2ec0566fbfbc23",
+    "type": "missing_evidence",
+    "work_ids": [
+      "wrk_16208b873f55"
+    ]
+  },
+  {
+    "evidence": {
+      "catalogue_set": [],
+      "conflicting_catalogues": false,
+      "conflicting_movements": false,
+      "missing_evidence": true,
+      "movement_set": [],
+      "title_path_catalogue_mismatches": [],
+      "title_path_movement_mismatches": []
+    },
+    "sha256": "f36c8c5793bb3c0f20d2db0c6ff9fd3eebb4ea52265c794e206cdaa6dd8be16f",
+    "type": "missing_evidence",
+    "work_ids": [
+      "wrk_9fb2db5f520d"
+    ]
+  },
+  {
+    "evidence": {
+      "catalogue_set": [
+        "570",
+        "576"
+      ],
+      "conflicting_catalogues": true,
+      "conflicting_movements": false,
+      "missing_evidence": false,
+      "movement_set": [
+        "3"
+      ],
+      "title_path_catalogue_mismatches": [],
+      "title_path_movement_mismatches": []
+    },
+    "reason": "conflicting_catalogues:['570', '576']",
+    "sha256": "f4f110426f3353c93f08f49ec6309c08ffe9df49b46e107e872378330239e0ea",
+    "titles": [
+      "Mozart: Piano Sonata No. 18 in D Major, K. 576: III. Allegretto",
+      "Piano Sonata No. 17 in B-Flat Major, K. 570: III. Allegretto",
+      "Piano Sonata No. 18 in D Major, K. 576: III. Allegretto - Remastered"
+    ],
+    "type": "quarantined_conflict",
+    "work_ids": [
+      "wrk_84e9c14c43c3",
+      "wrk_cce3d0639b84",
+      "wrk_de30525073c6"
+    ],
+    "xml_paths": [
+      "/share/users/student/w/wshelor/datasets/classical-performance-corpus/data/downloads/pianocore/1.0/raw/Mozart,_Wolfgang_Amadeus/Piano_Sonata_No.18_in_D_major,_K.576/3._Allegretto/score.mxl"
+    ]
+  },
+  {
+    "evidence": {
+      "catalogue_set": [],
+      "conflicting_catalogues": false,
+      "conflicting_movements": false,
+      "missing_evidence": true,
+      "movement_set": [],
+      "title_path_catalogue_mismatches": [],
+      "title_path_movement_mismatches": []
+    },
+    "sha256": "f6a7d0370e83180a4f6b1ad4dddc62bf6b9a9d927acf2277121c1c1d98168184",
+    "type": "missing_evidence",
+    "work_ids": [
+      "wrk_699b3980c9b1"
+    ]
+  }
+]
