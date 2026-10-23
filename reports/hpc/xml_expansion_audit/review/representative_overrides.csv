@@ -1,0 +1,3 @@
+analysis_work_id,representative_sha256,reason,evidence
+aw_d630a0d307ba,569fd97ea6995d87e74e85768a5d18a494b5a369a04000aa79a762a7e039e0e5,Reviewed: prefer canonical 2nd_no_repeat (no-repeat) edition per ASAP editorial; repeat structure matches parent MIDI no_repeat and measure count 287 vs 290,manual measure inspection and ASAP source comparison
+aw_877e8ddb01cd,aaaf073ffac52fbbb53dc0f7b5235d37b4d03535a8a1560f50b0ce5150eff341,Reviewed: prefer 3rd (with repeat) as representative; sibling 3rd aligns with primary source and MIDI score, while 3rd_no_repeat is alternative,manual review of MusicXML repeat structures and source editorial

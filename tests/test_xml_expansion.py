@@ -91,14 +91,14 @@ class XmlExpansionHelperTests(unittest.TestCase):
             _row(title="Mozart: Piano Sonata No. 18 in D Major, K. 576: III. Allegretto", xml_path="/K576/3._Allegretto/score.mxl"),
         ]
         # Valid override resolving to 576 should pass (576 in evidence)
-        valid = {"sha256": "abc", "resolved_catalogue": "576", "resolved_movement": "3", "reason": "manual review confirms K576"}
+        valid = {"sha256": "abc", "resolved_catalogue": "576", "resolved_movement": "3", "reason": "manual review confirms K576", "evidence": "score inspection"}
         # Should not raise
         try:
             validate_override(valid, rows, {}, {})
         except ValueError:
             self.fail("valid override should not raise")
         # Contradictory override to 999 should fail
-        bad = {"sha256": "abc", "resolved_catalogue": "999", "resolved_movement": "3", "reason": "bad"}
+        bad = {"sha256": "abc", "resolved_catalogue": "999", "resolved_movement": "3", "reason": "bad", "evidence": "none"}
         with self.assertRaises(ValueError):
             validate_override(bad, rows, {}, {})
 
@@ -117,7 +117,7 @@ class XmlExpansionHelperTests(unittest.TestCase):
         id2 = stable_analysis_work_id("Chopin", cat2, mov2)
         self.assertEqual(id1, id2)
         # But windows not interchangeable: they have different measure counts (not tested here)
-        # Representative policy should pick smallest sha deterministically
+        # Representative now requires explicit override; no auto pick by checksum
 
     def test_missing_catalogue_evidence_unresolved(self):
         # Title without catalogue for Mozart should be unresolved (missing)

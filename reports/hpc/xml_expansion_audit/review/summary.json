@@ -1,13 +1,24 @@
 {
   "already_represented": 96,
-  "approved_additions": 37,
-  "duplicate_movement_editions": 2,
-  "note": "Candidates are grouped by identical XML checksums then by conservative candidate identity (composer|catalogue|movement). Approved additions are solo-piano, non-conflicting, not already represented, with representative version per movement.",
-  "output_manifest_rows": 37,
+  "approved_additions": 35,
+  "excluded_not_selected": 0,
+  "input_hashes": {
+    "compositions_csv": "31cb805db1c35d01d2165db96a42a728ba555a5f9740a2402edba8c5d80c6eb3",
+    "current_bach_manifest": "a2e5a9a0da917605faeb514721cf0d25cb66a6ee2c452c88cd67badacf65df28",
+    "current_main_manifest": "d6912b1d5fe12a5afb35e3c6d499f0a7222205524d92c32bf5cf8974f8375b50",
+    "score_versions_csv": "29c3d9c21fdb21edfc52420d6f62b7f681f391b968e99a90e3ce0b3336a38c42",
+    "usable_csv": "22cb17d71be55abb982b0d1e04a71916073cca973beffc82721f80e2433f1c3a",
+    "works_csv": "0ab58b26b19aed999b52cbb9f14e2d9eb7a25f230a92e6a1a44107ea6e65afa6"
+  },
+  "note": "Candidates are grouped by identical XML checksums then by conservative candidate identity (composer|catalogue|movement). Approved additions are solo-piano, non-conflicting, not already represented, with explicit representative selection for ambiguous editions.",
+  "output_manifest_rows": 35,
   "quarantined_conflicts": 1,
   "total_hash_groups": 138,
   "total_usable_rows": 168,
+  "unresolved_ambiguous_edition": 4,
   "unresolved_missing_evidence": 0,
-  "unresolved_other": 0,
-  "unresolved_uncertain_instrumentation": 2
+  "unresolved_other": 4,
+  "unresolved_uncertain_instrumentation": 2,
+  "validation_state": "metadata_only",
+  "validator_version": "1.1.0"
 }

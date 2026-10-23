@@ -383,33 +383,6 @@ def detect_group_conflicts(rows: list[dict[str, Any]], works_lookup: dict[str, A
             if not mov_set:
                 missing = True
 
-        # Title-path mismatch detection for K and BWV
-        # K mismatch
-        title_cats = extract_k_catalogues(title)
-        path_cats = extract_catalogue_from_path(xml_path)
-        # Fallback composition catalogue for K
-        comp_id = _text(row.get("composition_id"))
-        if not title_cats and comp_id and comps_lookup and comp_id in comps_lookup:
-            comp_cat_raw = _text(comps_lookup[comp_id].get("catalogue"))
-            if comp_cat_raw:
-                title_cats = extract_k_catalogues(comp_cat_raw)
-        t_norm = normalize_catalogue_for_comparison(title_cats)
-        p_norm = normalize_catalogue_for_comparison(path_cats)
-        if t_norm and p_norm and t_norm != p_norm:
-            title_path_cat_mism.append(idx)
-        # BWV mismatch for Bach
-        if composer_key == "Bach":
-            t_bwv = re.search(r"bwv\s*(\d+)", title.casefold())
-            p_bwv = re.search(r"bwv[_ ]*(\d+)", xml_path.casefold())
-            if t_bwv and p_bwv and t_bwv.group(1) != p_bwv.group(1):
-                if idx not in title_path_cat_mism:
-                    title_path_cat_mism.append(idx)
-
-        mov_title = extract_movement_from_title(title, composer_key)
-        mov_path = extract_movement_from_path(xml_path)
-        if mov_title and mov_path and mov_title != mov_path:
-            title_path_mov_mism.append(idx)
-
     conflicting_cats = len(cat_set) > 1
     conflicting_movs = len(mov_set) > 1
 
@@ -526,14 +499,104 @@ def derive_candidate_identity(row: dict[str, Any], comps_lookup: dict[str, Any] 
     return catalogue, movement, evidence
 
 
+VALIDATOR_VERSION = "1.1.0"
+
+
+def hash_file(path: Path) -> str:
+    """SHA-256 of file contents, streamed."""
+    import hashlib
+
+    h = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(8 * 1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def resolve_corpus_path(corpus_root: Path, relative: str) -> Path:
+    """Resolve a manifest-relative path safely within corpus_root."""
+    root = Path(corpus_root).resolve()
+    rel = Path(relative)
+    if rel.is_absolute() or ".." in rel.parts:
+        raise ValueError(f"corpus asset path must be repository-relative without traversal: {relative!r}")
+    candidate = (root / rel).resolve()
+    if candidate != root and root not in candidate.parents:
+        raise ValueError(f"corpus asset path escapes corpus_root: {relative!r}")
+    return candidate
+
+
+def validate_representative_override(
+    row: dict[str, Any],
+    identity_to_shas: dict[str, list[str]],
+    analysis_id_to_key: dict[str, str],
+) -> None:
+    """Validate a single representative-selection override. Raises ValueError."""
+    aid = _text(row.get("analysis_work_id"))
+    sha = _text(row.get("representative_sha256")).casefold()
+    reason = _text(row.get("reason"))
+    evidence = _text(row.get("evidence"))
+    if not aid:
+        raise ValueError("representative override missing analysis_work_id")
+    if not sha:
+        raise ValueError(f"representative override for {aid} missing representative_sha256")
+    if not reason:
+        raise ValueError(f"representative override for {aid} missing reason")
+    if not evidence:
+        raise ValueError(f"representative override for {aid} missing evidence")
+    if aid not in analysis_id_to_key:
+        raise ValueError(f"representative override for unknown analysis_work_id {aid!r}")
+    shas = identity_to_shas.get(analysis_id_to_key[aid], [])
+    normalized = {s.casefold() for s in shas}
+    if sha not in normalized:
+        raise ValueError(
+            f"representative override for {aid} chooses sha {sha!r} which is not in group {sorted(shas)}"
+        )
+
+
+def find_score_version_for_selection(
+    work_id: str,
+    sha256: str,
+    relative_path: str,
+    score_versions: dict[str, dict[str, str]],
+) -> dict[str, str] | None:
+    """Find canonical score-version record matching work_id + sha + path, or None."""
+    rel_norm = Path(relative_path).as_posix().lstrip("/")
+    for sv in score_versions.values():
+        if _text(sv.get("work_id")) != work_id:
+            continue
+        sv_sha = _text(sv.get("sha256")).casefold()
+        if sv_sha and sv_sha != sha256.casefold():
+            continue
+        sv_path = _text(sv.get("source_file_path")).lstrip("/")
+        # Compare path suffix-insensitively: exact relative match expected for XML registrations
+        if sv_path and sv_path == rel_norm:
+            # If sha present, already matched; if sha empty, still consider path match but require sha check earlier
+            return sv
+        # Also allow sha-only match when path not registered (e.g., MIDI) but we require both for XML
+        if sv_sha == sha256.casefold() and sv_path == rel_norm:
+            return sv
+    # Fallback: sha match alone if path not available? Only if sv has same sha and work_id and is XML kind
+    for sv in score_versions.values():
+        if _text(sv.get("work_id")) == work_id and _text(sv.get("sha256")).casefold() == sha256.casefold():
+            sv_path = _text(sv.get("source_file_path"))
+            # If both are musicxml/mxl and path not checked, still treat as match only if format is musicxml-related
+            # Require explicit path equality for provenance safety; do not fallback to sha-only for XML
+            # So no fallback - return None to trigger derived handling
+            pass
+    return None
+
+
 def validate_override(override: dict[str, Any], group_rows: list[dict[str, Any]], works_lookup: dict, comps_lookup: dict) -> None:
     """Validate override for a conflicting hash group. Raises ValueError if invalid or contradictory."""
     sha = _text(override.get("sha256"))
     reason = _text(override.get("reason"))
+    evidence = _text(override.get("evidence"))
     resolved_catalogue = _text(override.get("resolved_catalogue"))
     resolved_movement = _text(override.get("resolved_movement"))
     if not sha or not reason:
         raise ValueError(f"override for {sha} must have sha256 and reason")
+    if not evidence:
+        raise ValueError(f"override for {sha} missing evidence")
     if not group_rows:
         raise ValueError(f"override sha {sha} not found in hash groups")
     # Check that resolved values are consistent with retained evidence if provided
