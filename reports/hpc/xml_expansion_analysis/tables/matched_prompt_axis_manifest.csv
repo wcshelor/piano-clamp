@@ -1,0 +1,11 @@
+axis_id,positive_prompt_id,negative_prompt_id
+classical_balance,MP006P,MP006N
+clear_tonal_stability,MP002P,MP002N
+dynamic_contrast,MP009P,MP009N
+melodic_ornamentation,MP008P,MP008N
+pianistic_resonance,MP010P,MP010N
+regular_phrase_lengths,MP001P,MP001N
+restrained_expression,MP005P,MP005N
+romantic_expressivity,MP007P,MP007N
+strict_rhythmic_regularity,MP004P,MP004N
+transparent_texture,MP003P,MP003N

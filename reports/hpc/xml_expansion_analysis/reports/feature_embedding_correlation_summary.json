@@ -1,0 +1,37 @@
+{
+  "feature_table": "/share/users/student/w/wshelor/piano-clamp-runs/xml_expansion_v1/musicological_features/tables/musicxml_features.csv",
+  "passage_bundle": "/share/users/student/w/wshelor/piano-clamp-runs/xml_expansion_v1/embeddings/passages",
+  "prompt_bundle": "/share/users/student/w/wshelor/piano-clamp-runs/embeddings/text",
+  "output_dir": "/share/users/student/w/wshelor/piano-clamp-runs/xml_expansion_v1/analysis_work_v1",
+  "unit": "work_id",
+  "aligned_unit_count": 35,
+  "feature_count": 23,
+  "embedding_dimension": 768,
+  "pca_components": 10,
+  "passage_metadata": {
+    "row_count": 3500,
+    "model_space": "c2",
+    "run_id": "20261023T140558Z-b0346e1fc47e"
+  },
+  "prompt_metadata": {
+    "row_count": 144,
+    "model_space": "c2",
+    "run_id": "20260923T212328Z-bc987c466054"
+  },
+  "outputs": [
+    "tables/aligned_feature_embedding_units.csv",
+    "tables/embedding_pc_scores.csv",
+    "tables/embedding_variance_spectrum.csv",
+    "tables/feature_composer_axis_correlations.csv",
+    "tables/feature_embedding_dimension_top_correlations.csv",
+    "tables/feature_embedding_pc_correlations.csv",
+    "tables/feature_matched_prompt_axis_correlations.csv",
+    "tables/feature_prompt_similarity_correlations.csv",
+    "tables/matched_prompt_axis_manifest.csv",
+    "tables/prompt_embedding_pc_projection.csv",
+    "tables/prompt_response_pc_projection.csv",
+    "tables/unit_composer_axis_scores.csv",
+    "tables/unit_matched_prompt_axis_scores.csv",
+    "tables/unit_prompt_similarities.csv"
+  ]
+}
