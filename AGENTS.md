@@ -1,5 +1,38 @@
 # Piano CLaMP Agent Instructions
 
+## Minimize HPC Resource Requests
+
+Always consider resource economy when planning, implementing, reviewing, or
+recommending HPC jobs, including one-off terminal submissions. Request the
+smallest practical GPU count, CPU count, memory allocation, and walltime that
+can reliably complete the selected workload with a justified safety margin.
+Do not copy generous resource limits from another job without checking them.
+
+- Use CPU jobs for metadata audits, validation, MusicXML feature extraction,
+  and other stages that do not benefit from a GPU. Separate these stages from
+  GPU inference where practical.
+- Before requesting GPU time, check the artifact inventory and existing caches,
+  validate inputs on CPU, and estimate the actual pending work after reuse and
+  deduplication. Prefer one GPU unless the implementation supports and benefits
+  from multiple GPUs.
+- Base requests on comparable completed jobs, measured peak memory and runtime,
+  or a small representative pilot. State the evidence or assumptions behind
+  proposed requests; do not present unmeasured estimates as requirements.
+- Distinguish host RAM from GPU memory. Leave enough headroom for model loading,
+  long inputs, and accounting uncertainty; avoid shrinking requests so far that
+  repeated out-of-memory failures or timeouts waste more resources.
+- Prefer checkpointed, resumable work and a realistic walltime over large
+  speculative reservations. Reuse completed work after interruption.
+- When a job queues, inspect its pending reason and actual GPU allocations
+  before changing resources. Do not assume idle CPUs mean a GPU is available,
+  and do not cancel/resubmit merely to try a smaller request when an appropriate
+  pending-job update can preserve the existing submission.
+- After execution, compare requested resources with observed use and use those
+  measurements to size the next run.
+
+See `docs/hpc_resource_requests.md` for the resource-sizing workflow. Resource
+economy does not replace dataset preflight or embedding inventory requirements.
+
 ## HPC Dataset Path and Preflight Checks
 
 The established HPC corpus directory is:

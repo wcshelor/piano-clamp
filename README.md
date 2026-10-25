@@ -368,6 +368,13 @@ which reports:
 ## HPC Usage
 
 For unattended cluster work, prefer `sbatch` jobs in [jobs/](jobs/).
+Always size jobs sparingly: use CPU resources for CPU-only work and request the
+smallest practical GPU count, CPU count, memory, and walltime supported by
+measurements or a representative pilot, with enough safety margin to avoid
+wasted retries. Reuse completed artifacts and checkpoint progress. See
+[Economical HPC resource requests](docs/hpc_resource_requests.md) before
+choosing or copying submission limits.
+
 Current useful examples include:
 
 - [jobs/embed_passages_chopin.slurm](jobs/embed_passages_chopin.slurm)

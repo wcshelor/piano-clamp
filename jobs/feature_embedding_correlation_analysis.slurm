@@ -2,21 +2,25 @@
 # Queue this job with matching inputs, for example:
 #   sbatch --export=ALL,CORPUS_ROOT=/path/to/corpus,PASSAGE_BUNDLE=/path/to/passages,PROMPT_BUNDLE=/path/to/text,OUTPUT_DIR=/path/to/output jobs/feature_embedding_correlation_analysis.slurm
 
-#SBATCH --partition=gpu
+#SBATCH --partition=workq
 #SBATCH --job-name=feature-embed-corr
-#SBATCH --cpus-per-task=8
-#SBATCH --mem=64G
-#SBATCH --time=04:00:00
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=4G
+#SBATCH --time=00:30:00
 #SBATCH --output=logs/slurm-%x-%j.out
 
 set -euo pipefail
 
 set +u
-source /share/users/student/w/wshelor/miniforge3/etc/profile.d/conda.sh
+source /home/student/w/wshelor/miniforge3/etc/profile.d/conda.sh
 conda activate piano-clamp-env
 set -u
 
 cd /share/users/student/w/wshelor/piano-clamp
+
+export OMP_NUM_THREADS="${OMP_NUM_THREADS:-${SLURM_CPUS_PER_TASK:-1}}"
+export OPENBLAS_NUM_THREADS="${SLURM_CPUS_PER_TASK:-1}"
+export MKL_NUM_THREADS="${MKL_NUM_THREADS:-${SLURM_CPUS_PER_TASK:-1}}"
 
 : "${PASSAGE_BUNDLE:?Set PASSAGE_BUNDLE to the matching passage embedding bundle directory}"
 : "${PROMPT_BUNDLE:?Set PROMPT_BUNDLE to the matching prompt embedding bundle directory}"
